@@ -30,7 +30,7 @@ export default function PlayerSelect({
   return (
     <Select onValueChange={(value) => onSelectPlayer(Number(value))}>
       <SelectTrigger className="w-full">
-        <p className="text-muted-foreground">Přidej nového hráče</p>
+        <p className="text-muted-foreground">add new player</p>
       </SelectTrigger>
       <SelectContent>{playerOptions}</SelectContent>
     </Select>
