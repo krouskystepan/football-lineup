@@ -2,7 +2,7 @@
 
 import { initialPlayers, NUMBER_OF_LINES } from '@/constants'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -46,6 +46,8 @@ export default function UpdateMatch({
 }) {
   const router = useRouter()
 
+  const [loading, setLoading] = useState(true)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,9 +64,8 @@ export default function UpdateMatch({
     },
   })
 
-  console.log(form.formState.errors)
-
   useEffect(() => {
+    setLoading(true)
     async function fetchMatches() {
       try {
         const fetchedMatch = await getMatchById(id)
@@ -75,7 +76,7 @@ export default function UpdateMatch({
         console.log(parsedMatch)
 
         form.reset({
-          matchName: 'lol',
+          matchName: parsedMatch.matchName,
           lines: parsedMatch.lines.map((line) => ({
             line: line.line,
             players: line.players.map((player) => ({
@@ -86,6 +87,7 @@ export default function UpdateMatch({
             })),
           })),
         })
+        setLoading(false)
       } catch (error) {
         console.error('Error fetching matches:', error)
       }
@@ -114,6 +116,8 @@ export default function UpdateMatch({
       console.error(error)
     }
   }
+
+  if (loading) return <div>Loading...</div>
 
   return (
     <main className="max-w-7xl mx-auto my-8">

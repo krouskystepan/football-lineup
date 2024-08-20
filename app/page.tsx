@@ -4,6 +4,8 @@ import { Separator } from '@/components/ui/separator'
 import { MatchType } from '@/types'
 import Link from 'next/link'
 
+export const revalidate = 60
+
 export default async function Home() {
   const matches: MatchType[] | undefined = await getMatches()
 
