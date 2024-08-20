@@ -2,7 +2,7 @@ export type Player = {
   id: number
   name: string
   defaultLine: number
-  score: number
+  score?: number
 }
 
 export type MatchType = {
