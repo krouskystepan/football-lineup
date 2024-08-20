@@ -72,20 +72,22 @@ export default async function Home() {
                 </Link>
               </div>
             </div>
-            {match.lines.map((line, index) => (
-              <div key={index} className="group">
-                <h3 className="text-xl font-semibold">Line {index + 1}</h3>
-                <div className="grid grid-cols-4">
-                  {line.players.map((player) => (
-                    <div key={player.id}>
-                      <p>{player.name}</p>
-                      <p>{player.score}</p>
-                    </div>
-                  ))}
+            {match.lines
+              .map((line, index) => (
+                <div key={index} className="group">
+                  <h3 className="text-xl font-semibold">Line {index + 1}</h3>
+                  <div className="grid grid-cols-4">
+                    {line.players.map((player) => (
+                      <div key={player.id}>
+                        <p>{player.name}</p>
+                        <p>{player.score}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <Separator className="group-last:hidden my-2 h-px w-full" />
                 </div>
-                <Separator className="group-last:hidden my-2 h-px w-full" />
-              </div>
-            ))}
+              ))
+              .reverse()}
           </div>
         ))}
       </div>
