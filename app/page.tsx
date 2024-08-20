@@ -2,6 +2,17 @@ import { getMatches } from '@/actions/match.action'
 import DeleteButton from '@/components/DeleteButton'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { MatchType } from '@/types'
 import Link from 'next/link'
 
@@ -17,6 +28,11 @@ export default async function Home() {
           Vytvořit zápas
         </Link>
       </div>
+
+      {matches?.length === 0 && (
+        <p className="text-2xl font-bold">Žádné zápasy</p>
+      )}
+
       <div className="grid-cols-1 md:grid-cols-3 gap-4 grid">
         {matches?.map((match) => (
           <div key={match._id} className="border p-4">
@@ -25,7 +41,29 @@ export default async function Home() {
                 {match.matchName}
               </h2>
               <div>
-                <DeleteButton id={String(match._id!)} />
+                <AlertDialog>
+                  <AlertDialogTrigger
+                    className={buttonVariants({ variant: 'destructive' })}
+                  >
+                    Smazat
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Jsi si jistý? </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Tato akce smaže zápas natrvalo z naši databáze. Akce je
+                        nevratná.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Zrušit</AlertDialogCancel>
+                      <AlertDialogAction asChild>
+                        <DeleteButton id={String(match._id!)} />
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+
                 <Link
                   href={`/update-match/${match._id}`}
                   className={buttonVariants({ variant: 'secondary' })}
