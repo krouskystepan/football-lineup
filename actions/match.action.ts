@@ -21,6 +21,7 @@ export async function updateMatch(id: string, match: MatchType) {
     await connectToDatabase()
 
     await Match.findByIdAndUpdate(id, match, { new: true })
+    revalidatePath('/')
   } catch (error) {
     console.error(error)
   }
@@ -32,6 +33,7 @@ export async function getMatchById(id: string) {
 
     const match = await Match.findById(id)
 
+    revalidatePath('/')
     return JSON.stringify(match)
   } catch (error) {
     console.error(error)
@@ -57,6 +59,7 @@ export async function getMatches() {
 
     const matches = await Match.find({})
 
+    revalidatePath('/')
     return matches
   } catch (error) {
     console.error('Error fetching matches:', error)
