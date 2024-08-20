@@ -28,3 +28,13 @@ function parseScore(value: string): number {
 export function formatScore(value: string): string {
   return parseScore(value).toString()
 }
+
+export function formatNumberToReadableString(number: number): string {
+  if (number >= 1_000_000) {
+    return (number / 1_000_000).toFixed(2) + 'M'
+  } else if (number >= 1_000) {
+    return (number / 1_000).toFixed(2) + 'k'
+  } else {
+    return number.toString()
+  }
+}

@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { MatchType } from '@/types'
 import Link from 'next/link'
+import { formatNumberToReadableString } from '@/lib/utils'
 
 export const revalidate = 60
 
@@ -80,7 +81,11 @@ export default async function Home() {
                     {line.players.map((player) => (
                       <div key={player.id}>
                         <p>{player.name}</p>
-                        <p>{player.score}</p>
+                        <p>
+                          {formatNumberToReadableString(
+                            parseInt(player.score!)
+                          )}
+                        </p>
                       </div>
                     ))}
                   </div>
