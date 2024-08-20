@@ -2,7 +2,7 @@
 
 import { initialPlayers, NUMBER_OF_LINES } from '@/constants'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -16,9 +16,11 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
-import { createMatch } from '@/actions/match.action'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { formatScore } from '@/lib/utils'
+import { MatchType } from '@/types'
+import { getMatchById, updateMatch } from '@/actions/match.action'
 
 const formSchema = z.object({
   matchName: z.string().min(1, { message: 'Jméno zápasu je povinné' }),
@@ -28,7 +30,7 @@ const formSchema = z.object({
         z.object({
           id: z.coerce.number(),
           name: z.string(),
-          score: z.coerce.number(),
+          score: z.string().min(1, { message: 'Povinné' }),
           defaultLine: z.coerce.number(),
         })
       ),
@@ -37,7 +39,11 @@ const formSchema = z.object({
   ),
 })
 
-export default function Match() {
+export default function UpdateMatch({
+  params: { id },
+}: {
+  params: { id: string }
+}) {
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,17 +55,60 @@ export default function Match() {
         players: initialPlayers.map((player) => ({
           id: player.id,
           name: player.name,
-          score: 0,
+          score: player.score?.toString() ?? '0',
           defaultLine: player.defaultLine,
         })),
       })),
     },
   })
 
+  console.log(form.formState.errors)
+
+  useEffect(() => {
+    async function fetchMatches() {
+      try {
+        const fetchedMatch = await getMatchById(id)
+        if (!fetchedMatch) return
+
+        const parsedMatch: MatchType = JSON.parse(fetchedMatch)
+
+        console.log(parsedMatch)
+
+        form.reset({
+          matchName: 'lol',
+          lines: parsedMatch.lines.map((line) => ({
+            line: line.line,
+            players: line.players.map((player) => ({
+              id: player.id,
+              name: player.name,
+              score: player.score?.toString() ?? '0',
+              defaultLine: player.defaultLine,
+            })),
+          })),
+        })
+      } catch (error) {
+        console.error('Error fetching matches:', error)
+      }
+    }
+
+    fetchMatches()
+  }, [id, form])
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await createMatch(values)
-      toast.success('Zápas byl úspěšně vytvořen')
+      const formattedValues: MatchType = {
+        ...values,
+        lines: values.lines.map((line) => ({
+          ...line,
+          players: line.players.map((player) => ({
+            ...player,
+            score: formatScore(player.score),
+          })),
+        })),
+      }
+
+      await updateMatch(id, formattedValues)
+      toast.success('Zápas byl úspěšně aktualizován')
       router.push('/')
     } catch (error) {
       console.error(error)
@@ -70,12 +119,12 @@ export default function Match() {
     <main className="max-w-7xl mx-auto my-8">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex justify-around items-center mb-6">
+          <div className="flex justify-center items-center mb-6 ">
             <FormField
               control={form.control}
               name="matchName"
               render={({ field }) => (
-                <FormItem className="w-1/3">
+                <FormItem className="w-full md:w-1/3">
                   <FormLabel className="text-2xl font-bold">
                     Jméno zápasu
                   </FormLabel>
@@ -107,7 +156,7 @@ export default function Match() {
                           <FormLabel>{player.name}</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Enter score"
+                              placeholder="Zadej skóre"
                               {...field}
                               className={`${
                                 lineIndex === player.defaultLine - 1

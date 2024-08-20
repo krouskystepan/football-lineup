@@ -16,6 +16,28 @@ export async function createMatch(match: MatchType) {
   }
 }
 
+export async function updateMatch(id: string, match: MatchType) {
+  try {
+    await connectToDatabase()
+
+    await Match.findByIdAndUpdate(id, match, { new: true })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function getMatchById(id: string) {
+  try {
+    await connectToDatabase()
+
+    const match = await Match.findById(id)
+
+    return JSON.stringify(match)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function getMatches() {
   try {
     await connectToDatabase()
