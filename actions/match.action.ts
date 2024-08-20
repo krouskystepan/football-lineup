@@ -38,6 +38,19 @@ export async function getMatchById(id: string) {
   }
 }
 
+export async function deleteMatch(id: string) {
+  try {
+    await connectToDatabase()
+
+    console.log('Deleting match with id:', id)
+
+    await Match.findByIdAndDelete(id)
+    revalidatePath('/')
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function getMatches() {
   try {
     await connectToDatabase()

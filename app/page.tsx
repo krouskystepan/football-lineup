@@ -1,4 +1,5 @@
 import { getMatches } from '@/actions/match.action'
+import DeleteButton from '@/components/DeleteButton'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { MatchType } from '@/types'
@@ -23,12 +24,15 @@ export default async function Home() {
               <h2 className="text-3xl font-bold text-center">
                 {match.matchName}
               </h2>
-              <Link
-                href={`/update-match/${match._id}`}
-                className={buttonVariants({ variant: 'secondary' })}
-              >
-                Aktualizovat
-              </Link>
+              <div>
+                <DeleteButton id={String(match._id!)} />
+                <Link
+                  href={`/update-match/${match._id}`}
+                  className={buttonVariants({ variant: 'secondary' })}
+                >
+                  Aktualizovat
+                </Link>
+              </div>
             </div>
             {match.lines.map((line, index) => (
               <div key={index} className="group">
