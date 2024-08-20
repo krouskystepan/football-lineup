@@ -9,7 +9,7 @@ export async function createMatch(match: MatchType) {
   try {
     await connectToDatabase()
 
-    Match.create(match)
+    await Match.create(match)
     revalidatePath('/')
   } catch (error) {
     console.error(error)

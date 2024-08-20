@@ -9,7 +9,7 @@ export async function connectToDatabase() {
   if (isConnected) return console.log('MongoDB is already connected')
 
   try {
-    await mongoose.connect(process.env.MONGODB_URL, { socketTimeoutMS: 30000 })
+    await mongoose.connect(process.env.MONGODB_URL)
 
     isConnected = true
     console.log('MongoDB is connected')
