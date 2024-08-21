@@ -17,3 +17,9 @@ export type MatchType = {
     totalScore: number
   }>
 }
+
+export type MatchTable = {
+  playerName: string
+  [key: `line${number}`]: number | undefined
+  total: number
+}
