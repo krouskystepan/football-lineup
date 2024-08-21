@@ -34,7 +34,7 @@ export async function getMatchById(id: string) {
     const match = await Match.findById(id)
 
     revalidatePath('/')
-    return JSON.stringify(match)
+    return JSON.stringify([match])
   } catch (error) {
     console.error(error)
   }
@@ -43,8 +43,6 @@ export async function getMatchById(id: string) {
 export async function deleteMatch(id: string) {
   try {
     await connectToDatabase()
-
-    console.log('Deleting match with id:', id)
 
     await Match.findByIdAndDelete(id)
     revalidatePath('/')
