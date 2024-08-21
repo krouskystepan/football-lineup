@@ -38,3 +38,36 @@ export function formatNumberToReadableString(number: number): string {
     return number.toString()
   }
 }
+
+export function convertToNumber(input: string): number {
+  // Trim any whitespace and convert to lowercase
+  const trimmedInput = input.trim().toLowerCase()
+
+  // Replace commas with dots for decimal parsing
+  const normalizedInput = trimmedInput.replace(',', '.')
+
+  // Regular expression to match patterns like "4k", "5.3k", "2.3k", etc.
+  const match = normalizedInput.match(/^(\d+(\.\d+)?)(k|m)?$/)
+
+  if (!match) {
+    throw new Error('Invalid input format')
+  }
+
+  const [_, numberPart, __, suffix] = match
+  let number = parseFloat(numberPart)
+
+  // Apply the appropriate multiplier based on the suffix
+  switch (suffix) {
+    case 'k':
+      number *= 1000
+      break
+    case 'm':
+      number *= 1000000
+      break
+    // No suffix means the number is already in its final form
+    default:
+      break
+  }
+
+  return number
+}

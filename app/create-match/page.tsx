@@ -19,7 +19,7 @@ import { z } from 'zod'
 import { createMatch } from '@/actions/match.action'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { formatScore } from '@/lib/utils'
+import { convertToNumber, formatScore } from '@/lib/utils'
 import { MatchType } from '@/types'
 
 const formSchema = z.object({
@@ -60,8 +60,28 @@ export default function CreateMatch() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      const playerScores: Record<string, number> = {}
+
+      values.lines.forEach((line) => {
+        line.players.forEach((player) => {
+          const playerId = player.id
+          const score = convertToNumber(player.score || '0')
+          playerScores[playerId] = (playerScores[playerId] || 0) + score
+        })
+      })
+
+      const total: Array<{ playerName: string; totalScore: number }> =
+        Object.entries(playerScores).map(([id, totalScore]) => {
+          const player = initialPlayers.find((p) => p.id === parseInt(id))
+          return {
+            playerName: player ? player.name : 'Unknown',
+            totalScore: totalScore,
+          }
+        })
+
       const formattedValues: MatchType = {
         ...values,
+        total,
         lines: values.lines.map((line) => ({
           ...line,
           players: line.players.map((player) => ({
@@ -120,7 +140,7 @@ export default function CreateMatch() {
                           <FormLabel>{player.name}</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Zadej skóre"
+                              placeholder="Skóre"
                               {...field}
                               className={`${
                                 lineIndex === player.defaultLine - 1

@@ -60,7 +60,7 @@ export async function getMatches() {
     const matches = await Match.find({})
 
     revalidatePath('/')
-    return matches
+    return JSON.stringify(matches)
   } catch (error) {
     console.error('Error fetching matches:', error)
   }

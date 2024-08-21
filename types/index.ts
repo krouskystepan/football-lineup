@@ -12,4 +12,8 @@ export type MatchType = {
     line: number
     players: Player[]
   }>
+  total: Array<{
+    playerName: string
+    totalScore: number
+  }>
 }

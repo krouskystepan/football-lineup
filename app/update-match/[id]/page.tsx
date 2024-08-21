@@ -18,7 +18,7 @@ import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { formatScore } from '@/lib/utils'
+import { convertToNumber, formatScore } from '@/lib/utils'
 import { MatchType } from '@/types'
 import { getMatchById, updateMatch } from '@/actions/match.action'
 
@@ -73,8 +73,6 @@ export default function UpdateMatch({
 
         const parsedMatch: MatchType = JSON.parse(fetchedMatch)
 
-        console.log(parsedMatch)
-
         form.reset({
           matchName: parsedMatch.matchName,
           lines: parsedMatch.lines.map((line) => ({
@@ -98,8 +96,28 @@ export default function UpdateMatch({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      const playerScores: Record<string, number> = {}
+
+      values.lines.forEach((line) => {
+        line.players.forEach((player) => {
+          const playerId = player.id
+          const score = convertToNumber(player.score || '0')
+          playerScores[playerId] = (playerScores[playerId] || 0) + score
+        })
+      })
+
+      const total: Array<{ playerName: string; totalScore: number }> =
+        Object.entries(playerScores).map(([id, totalScore]) => {
+          const player = initialPlayers.find((p) => p.id === parseInt(id))
+          return {
+            playerName: player ? player.name : 'Unknown',
+            totalScore: totalScore,
+          }
+        })
+
       const formattedValues: MatchType = {
         ...values,
+        total,
         lines: values.lines.map((line) => ({
           ...line,
           players: line.players.map((player) => ({

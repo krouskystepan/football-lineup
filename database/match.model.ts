@@ -1,4 +1,4 @@
-import { Player } from '@/types'
+import { Player } from '@/types' // Ensure Player type is imported correctly
 import { Schema, model, models, Document } from 'mongoose'
 
 export interface IMatch extends Document {
@@ -6,6 +6,10 @@ export interface IMatch extends Document {
   lines: Array<{
     line: number
     players: Player[]
+  }>
+  total: Array<{
+    playerName: string
+    totalScore: number
   }>
 }
 
@@ -32,7 +36,7 @@ const MatchSchema = new Schema({
           },
           score: {
             type: Number,
-            required: true,
+            required: false,
           },
           defaultLine: {
             type: Number,
@@ -42,8 +46,20 @@ const MatchSchema = new Schema({
       ],
     },
   ],
+  total: [
+    {
+      playerName: {
+        type: String,
+        required: true,
+      },
+      totalScore: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
 })
 
-const Match = models.Match || model('Match', MatchSchema)
+const Match = models.Match || model<IMatch>('Match', MatchSchema)
 
 export default Match
