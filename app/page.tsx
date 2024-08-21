@@ -39,14 +39,14 @@ export default async function Home() {
             <Link href={'/create-match'} className={buttonVariants()}>
               Vytvořit zápas
             </Link>
-            {/* <Link
+            <Link
               href={'/edit-lineup'}
               className={buttonVariants({
                 variant: 'edit',
               })}
             >
               Upravit sestavu
-            </Link> */}
+            </Link>
           </>
         )}
         <AuthButton />

@@ -1,10 +1,8 @@
 'use client'
 
-import { initialPlayers } from '@/constants'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -19,8 +17,9 @@ import { z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { convertToNumber, formatScore } from '@/lib/utils'
-import { MatchType } from '@/types'
+import { LineupType, MatchType } from '@/types'
 import { getMatchById, updateMatch } from '@/actions/match.action'
+import { getLineups } from '@/actions/lineup.action'
 
 const formSchema = z.object({
   matchName: z.string().min(1, { message: 'Jméno zápasu je povinné' }),
@@ -45,8 +44,8 @@ export default function UpdateMatch({
   params: { id: string }
 }) {
   const router = useRouter()
-
   const [loading, setLoading] = useState(true)
+  const [lineups, setLineups] = useState<LineupType[]>([])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,12 +53,7 @@ export default function UpdateMatch({
       matchName: '',
       lines: Array.from({ length: 11 }, (_, index) => ({
         line: index + 1,
-        players: initialPlayers.map((player) => ({
-          _id: player._id,
-          name: player.name,
-          score: player.score?.toString() ?? '0',
-          defaultLine: player.defaultLine,
-        })),
+        players: [],
       })),
     },
   })
@@ -69,23 +63,41 @@ export default function UpdateMatch({
     async function fetchMatches() {
       try {
         const fetchedMatch = await getMatchById(id)
+        const fetchedLineups = await getLineups()
 
         if (!fetchedMatch) return
+        if (!fetchedLineups) return
 
         const parsedMatch: MatchType = JSON.parse(fetchedMatch)
+        const parsedLineups: LineupType[] = JSON.parse(fetchedLineups)
+
+        setLineups(parsedLineups)
 
         form.reset({
           matchName: parsedMatch.matchName,
           lines: parsedMatch.lines.map((line) => ({
             line: line.line,
-            players: line.players.map((player) => ({
-              _id: String(player._id),
-              name: player.name,
-              score: player.score?.toString() ?? '0',
-              defaultLine: player.defaultLine,
-            })),
+            players: line.players
+              .map((player) => {
+                // Find corresponding lineup data for the player
+                const lineupData = parsedLineups.find(
+                  (lineup) => lineup._id === player._id
+                )
+
+                return {
+                  _id: String(player._id),
+                  name: player.name,
+                  score: player.score?.toString() ?? '0',
+                  defaultLine: lineupData
+                    ? lineupData.defaultLine
+                    : player.defaultLine,
+                }
+              })
+              .sort((a, b) => a.defaultLine - b.defaultLine)
+              .reverse(),
           })),
         })
+
         setLoading(false)
       } catch (error) {
         console.error('Error fetching matches:', error)
@@ -109,7 +121,7 @@ export default function UpdateMatch({
 
       const total: Array<{ playerName: string; totalScore: number }> =
         Object.entries(playerScores).map(([id, totalScore]) => {
-          const player = initialPlayers.find((p) => p._id === id)
+          const player = lineups.find((p) => p._id === id)
           return {
             playerName: player ? player.name : 'Unknown',
             totalScore: totalScore,

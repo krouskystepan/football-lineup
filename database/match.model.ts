@@ -27,7 +27,7 @@ const MatchSchema = new Schema({
       players: [
         {
           _id: {
-            type: Number,
+            type: String,
             required: true,
           },
           name: {

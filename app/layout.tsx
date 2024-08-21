@@ -31,7 +31,7 @@ export default async function RootLayout({
         )}
       >
         <SessionProvider session={session}>
-          <main className="px-4">{children}</main>
+          <main>{children}</main>
           <Toaster richColors />
         </SessionProvider>
       </body>
