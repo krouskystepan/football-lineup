@@ -32,7 +32,6 @@ export async function updateMatch(id: string, match: MatchType) {
 
 export async function getMatchById(id: string) {
   try {
-    await isLoggedIn()
     await connectToDatabase()
 
     const match = await Match.findById(id)
