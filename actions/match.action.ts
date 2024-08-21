@@ -34,7 +34,7 @@ export async function getMatchById(id: string) {
     const match = await Match.findById(id)
 
     revalidatePath('/')
-    return JSON.stringify([match])
+    return JSON.stringify(match)
   } catch (error) {
     console.error(error)
   }

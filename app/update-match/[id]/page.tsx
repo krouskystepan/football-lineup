@@ -69,6 +69,7 @@ export default function UpdateMatch({
     async function fetchMatches() {
       try {
         const fetchedMatch = await getMatchById(id)
+
         if (!fetchedMatch) return
 
         const parsedMatch: MatchType = JSON.parse(fetchedMatch)
