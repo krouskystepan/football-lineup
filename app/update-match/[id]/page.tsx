@@ -45,7 +45,8 @@ export default function UpdateMatch({
 }) {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
-  const [lineups, setLineups] = useState<LineupType[]>([])
+  // const [lineups, setLineups] = useState<LineupType[]>([])
+  const [match, setMatch] = useState<MatchType>()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,15 +64,16 @@ export default function UpdateMatch({
     async function fetchMatches() {
       try {
         const fetchedMatch = await getMatchById(id)
-        const fetchedLineups = await getLineups()
+        // const fetchedLineups = await getLineups()
 
         if (!fetchedMatch) return
-        if (!fetchedLineups) return
+        // if (!fetchedLineups) return
 
         const parsedMatch: MatchType = JSON.parse(fetchedMatch)
-        const parsedLineups: LineupType[] = JSON.parse(fetchedLineups)
+        // const parsedLineups: LineupType[] = JSON.parse(fetchedLineups)
 
-        setLineups(parsedLineups)
+        // setLineups(parsedLineups)
+        setMatch(parsedMatch)
 
         form.reset({
           matchName: parsedMatch.matchName,
@@ -79,18 +81,11 @@ export default function UpdateMatch({
             line: line.line,
             players: line.players
               .map((player) => {
-                // Find corresponding lineup data for the player
-                const lineupData = parsedLineups.find(
-                  (lineup) => lineup._id === player._id
-                )
-
                 return {
                   _id: String(player._id),
                   name: player.name,
                   score: player.score?.toString() ?? '0',
-                  defaultLine: lineupData
-                    ? lineupData.defaultLine
-                    : player.defaultLine,
+                  defaultLine: player.defaultLine,
                 }
               })
               .sort((a, b) => a.defaultLine - b.defaultLine)
@@ -121,7 +116,10 @@ export default function UpdateMatch({
 
       const total: Array<{ playerName: string; totalScore: number }> =
         Object.entries(playerScores).map(([id, totalScore]) => {
-          const player = lineups.find((p) => p._id === id)
+          const player = match?.lines[0].players.find(
+            (player) => player._id === id
+          )
+
           return {
             playerName: player ? player.name : 'Unknown',
             totalScore: totalScore,
