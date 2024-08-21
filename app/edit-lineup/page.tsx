@@ -75,7 +75,6 @@ export default function Lineup() {
 
   async function onSubmit(values: FormValues) {
     try {
-      console.log('Form submitted:', values)
       await updateLineup(values.players)
       toast.success('Sestava byla úspěšně uložena')
       router.push('/')
