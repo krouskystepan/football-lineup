@@ -3,6 +3,8 @@ import { Inter as FontSans } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui/sonner'
+import { getServerSession } from 'next-auth'
+import SessionProvider from '@/providers/SessionProvider'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -13,11 +15,13 @@ export const metadata: Metadata = {
   title: 'J-elita CZ/SK',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const session = await getServerSession()
+
   return (
     <html lang="en">
       <body
@@ -26,8 +30,10 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <main className="px-4">{children}</main>
-        <Toaster richColors />
+        <SessionProvider session={session}>
+          <main className="px-4">{children}</main>
+          <Toaster richColors />
+        </SessionProvider>
       </body>
     </html>
   )

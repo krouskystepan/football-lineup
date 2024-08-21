@@ -1,8 +1,19 @@
 import { type ClassValue, clsx } from 'clsx'
+import { getServerSession } from 'next-auth'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+export async function isLoggedIn() {
+  const session = await getServerSession()
+
+  if (!session?.user?.name) {
+    throw new Error('Not logged in')
+  }
+
+  return session
 }
 
 function parseScore(value: string): number {
