@@ -32,11 +32,13 @@ export default async function Home() {
   const parsedMatches: MatchType[] = JSON.parse(matches)
 
   return (
-    <div className="py-4">
-      <div className="flex gap-5  items-center">
-        <Link href={'/create-match'} className={buttonVariants()}>
-          Vytvořit zápas
-        </Link>
+    <main>
+      <div className="flex gap-5 items-cente justify-end border-b p-2">
+        {session?.user && (
+          <Link href={'/create-match'} className={buttonVariants()}>
+            Vytvořit zápas
+          </Link>
+        )}
         <AuthButton />
       </div>
 
@@ -44,7 +46,7 @@ export default async function Home() {
         <p className="text-2xl font-bold">Žádné zápasy</p>
       )}
 
-      <div className="grid-cols-1 md:grid-cols-5 gap-4 grid">
+      <div className="grid-cols-1 md:grid-cols-5 gap-4 grid p-4">
         {parsedMatches.map((match) => (
           <div key={match._id} className="border p-4">
             <div className="flex gap-4 justify-between flex-col">
@@ -57,7 +59,7 @@ export default async function Home() {
               >
                 Detail Zápasu
               </Link>
-              {session && (
+              {session?.user && (
                 <div className="flex gap-4 w-full justify-around">
                   <DeleteDialog id={match._id!} className="w-full" />
                   <Link
@@ -75,6 +77,6 @@ export default async function Home() {
           </div>
         ))}
       </div>
-    </div>
+    </main>
   )
 }
