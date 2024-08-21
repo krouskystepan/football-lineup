@@ -10,7 +10,6 @@ export default function DeleteButton({ id }: { id: string }) {
     try {
       await deleteMatch(matchId)
       toast.success('Zápas byl smazán')
-      revalidatePath('/')
     } catch (error) {
       console.error(error)
     }

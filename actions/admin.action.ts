@@ -1,9 +1,9 @@
 'use server'
 
-import Admin from '@/database/admin.model copy'
+import Admin from '@/database/admin.model'
 import { connectToDatabase } from '@/lib/db'
-import { isLoggedIn } from '@/lib/utils'
 import { revalidatePath } from 'next/cache'
+import { isLoggedIn } from '@/lib/utils'
 import bcrypt from 'bcrypt'
 
 export async function getAdmin({ username }: { username: string }) {
@@ -27,15 +27,12 @@ export async function createAdmin({
   password: string
 }) {
   try {
-    // await isLoggedIn()
+    await isLoggedIn()
     await connectToDatabase()
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const admin = new Admin({ username, password: hashedPassword })
-
-    await admin.save()
+    await Admin.create({ username, password: hashedPassword })
 
     revalidatePath('/')
   } catch (error) {

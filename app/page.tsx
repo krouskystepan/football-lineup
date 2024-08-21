@@ -35,9 +35,19 @@ export default async function Home() {
     <main>
       <div className="flex gap-5 items-cente justify-end border-b p-2">
         {session?.user && (
-          <Link href={'/create-match'} className={buttonVariants()}>
-            Vytvořit zápas
-          </Link>
+          <>
+            <Link href={'/create-match'} className={buttonVariants()}>
+              Vytvořit zápas
+            </Link>
+            {/* <Link
+              href={'/edit-lineup'}
+              className={buttonVariants({
+                variant: 'edit',
+              })}
+            >
+              Upravit sestavu
+            </Link> */}
+          </>
         )}
         <AuthButton />
       </div>

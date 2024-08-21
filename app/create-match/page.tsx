@@ -1,6 +1,6 @@
 'use client'
 
-import { initialPlayers, NUMBER_OF_LINES } from '@/constants'
+import { initialPlayers } from '@/constants'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -28,7 +28,7 @@ const formSchema = z.object({
     z.object({
       players: z.array(
         z.object({
-          id: z.coerce.number(),
+          _id: z.string(),
           name: z.string(),
           score: z.string().min(1, { message: 'Povinné' }),
           defaultLine: z.coerce.number(),
@@ -46,10 +46,10 @@ export default function CreateMatch() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       matchName: '',
-      lines: Array.from({ length: NUMBER_OF_LINES }, (_, index) => ({
+      lines: Array.from({ length: 11 }, (_, index) => ({
         line: index + 1,
         players: initialPlayers.map((player) => ({
-          id: player.id,
+          _id: player._id,
           name: player.name,
           score: '0',
           defaultLine: player.defaultLine,
@@ -64,7 +64,7 @@ export default function CreateMatch() {
 
       values.lines.forEach((line) => {
         line.players.forEach((player) => {
-          const playerId = player.id
+          const playerId = player._id
           const score = convertToNumber(player.score || '0')
           playerScores[playerId] = (playerScores[playerId] || 0) + score
         })
@@ -72,7 +72,7 @@ export default function CreateMatch() {
 
       const total: Array<{ playerName: string; totalScore: number }> =
         Object.entries(playerScores).map(([id, totalScore]) => {
-          const player = initialPlayers.find((p) => p.id === parseInt(id))
+          const player = initialPlayers.find((p) => p._id === id)
           return {
             playerName: player ? player.name : 'Unknown',
             totalScore: totalScore,

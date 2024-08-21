@@ -1,5 +1,5 @@
 export type Player = {
-  id: number
+  _id: string
   name: string
   defaultLine: number
   score?: string
@@ -22,4 +22,10 @@ export type MatchTable = {
   playerName: string
   [key: `line${number}`]: number | undefined
   total: number
+}
+
+export type LineupType = {
+  _id?: string
+  name: string
+  defaultLine: number
 }

@@ -2,7 +2,6 @@ import { getMatchById } from '@/actions/match.action'
 import { MatchType, MatchTable } from '@/types'
 import { MatchTableColumns } from './columns'
 import { DataTable } from './data-table'
-import { NUMBER_OF_LINES } from '@/constants'
 
 export default async function MatchDetail({
   params: { id },

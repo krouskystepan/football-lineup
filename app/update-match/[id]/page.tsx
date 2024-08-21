@@ -1,6 +1,6 @@
 'use client'
 
-import { initialPlayers, NUMBER_OF_LINES } from '@/constants'
+import { initialPlayers } from '@/constants'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -28,7 +28,7 @@ const formSchema = z.object({
     z.object({
       players: z.array(
         z.object({
-          id: z.coerce.number(),
+          _id: z.string(),
           name: z.string(),
           score: z.string().min(1, { message: 'Povinné' }),
           defaultLine: z.coerce.number(),
@@ -52,10 +52,10 @@ export default function UpdateMatch({
     resolver: zodResolver(formSchema),
     defaultValues: {
       matchName: '',
-      lines: Array.from({ length: NUMBER_OF_LINES }, (_, index) => ({
+      lines: Array.from({ length: 11 }, (_, index) => ({
         line: index + 1,
         players: initialPlayers.map((player) => ({
-          id: player.id,
+          _id: player._id,
           name: player.name,
           score: player.score?.toString() ?? '0',
           defaultLine: player.defaultLine,
@@ -79,7 +79,7 @@ export default function UpdateMatch({
           lines: parsedMatch.lines.map((line) => ({
             line: line.line,
             players: line.players.map((player) => ({
-              id: player.id,
+              _id: String(player._id),
               name: player.name,
               score: player.score?.toString() ?? '0',
               defaultLine: player.defaultLine,
@@ -101,7 +101,7 @@ export default function UpdateMatch({
 
       values.lines.forEach((line) => {
         line.players.forEach((player) => {
-          const playerId = player.id
+          const playerId = player._id
           const score = convertToNumber(player.score || '0')
           playerScores[playerId] = (playerScores[playerId] || 0) + score
         })
@@ -109,7 +109,7 @@ export default function UpdateMatch({
 
       const total: Array<{ playerName: string; totalScore: number }> =
         Object.entries(playerScores).map(([id, totalScore]) => {
-          const player = initialPlayers.find((p) => p.id === parseInt(id))
+          const player = initialPlayers.find((p) => p._id === id)
           return {
             playerName: player ? player.name : 'Unknown',
             totalScore: totalScore,
@@ -132,6 +132,7 @@ export default function UpdateMatch({
       toast.success('Zápas byl úspěšně aktualizován')
       router.push('/')
     } catch (error) {
+      toast.error('Zápas se nepodařilo aktualizovat')
       console.error(error)
     }
   }
@@ -167,7 +168,7 @@ export default function UpdateMatch({
                 key={lineIndex}
                 className="space-y-2 border p-4 rounded-md my-2"
               >
-                <h3 className="text-2xl font-semibold">Line {lineIndex + 1}</h3>
+                <h3 className="text-2xl font-semibold">Line {line.line}</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 xl:grid-cols-11 gap-4">
                   {line.players.map((player, playerIndex) => (
                     <FormField
@@ -196,11 +197,10 @@ export default function UpdateMatch({
               </div>
             ))
             .reverse()}
+
           <Button
             type="submit"
-            disabled={
-              form.formState.isSubmitting || form.formState.isSubmitSuccessful
-            }
+            disabled={form.formState.isSubmitting}
             className="w-full"
           >
             Odeslat

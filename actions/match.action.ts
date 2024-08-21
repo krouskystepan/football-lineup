@@ -2,11 +2,13 @@
 
 import Match from '@/database/match.model'
 import { connectToDatabase } from '@/lib/db'
+import { isLoggedIn } from '@/lib/utils'
 import { MatchType } from '@/types'
 import { revalidatePath } from 'next/cache'
 
 export async function createMatch(match: MatchType) {
   try {
+    await isLoggedIn()
     await connectToDatabase()
 
     await Match.create(match)
@@ -18,6 +20,7 @@ export async function createMatch(match: MatchType) {
 
 export async function updateMatch(id: string, match: MatchType) {
   try {
+    await isLoggedIn()
     await connectToDatabase()
 
     await Match.findByIdAndUpdate(id, match, { new: true })
@@ -29,6 +32,7 @@ export async function updateMatch(id: string, match: MatchType) {
 
 export async function getMatchById(id: string) {
   try {
+    await isLoggedIn()
     await connectToDatabase()
 
     const match = await Match.findById(id)
@@ -42,6 +46,7 @@ export async function getMatchById(id: string) {
 
 export async function deleteMatch(id: string) {
   try {
+    await isLoggedIn()
     await connectToDatabase()
 
     await Match.findByIdAndDelete(id)
