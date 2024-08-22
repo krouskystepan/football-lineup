@@ -11,6 +11,7 @@ export interface IMatch extends Document {
     playerName: string
     totalScore: number
   }>
+  createdAt: Date
 }
 
 const MatchSchema = new Schema({
@@ -58,6 +59,10 @@ const MatchSchema = new Schema({
       },
     },
   ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 })
 
 const Match = models.Match || model<IMatch>('Match', MatchSchema)

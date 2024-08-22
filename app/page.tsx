@@ -1,18 +1,5 @@
 import { getMatches } from '@/actions/match.action'
-import DeleteButton from '@/components/DeleteButton'
-import { Button, buttonVariants } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+import { buttonVariants } from '@/components/ui/button'
 import { MatchType } from '@/types'
 import Link from 'next/link'
 import { DeleteDialog } from '@/components/DeleteDialog'
@@ -31,29 +18,41 @@ export default async function Home() {
 
   const parsedMatches: MatchType[] = JSON.parse(matches)
 
+  parsedMatches.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
+
   return (
     <main>
-      <div className="flex flex-col gap-2 sm:flex-row items-center justify-end border-b p-2">
-        {session?.user && (
-          <div className="flex-col sm:flex-row flex gap-2 w-full sm:w-fit">
-            <Link
-              href={'/create-match'}
-              className={buttonVariants({ className: 'w-full md:w-fit' })}
-            >
-              Vytvořit zápas
-            </Link>
-            <Link
-              href={'/edit-lineup'}
-              className={buttonVariants({
-                variant: 'edit',
-                className: 'w-full md:w-fit',
-              })}
-            >
-              Upravit sestavu
-            </Link>
-          </div>
-        )}
-        <AuthButton />
+      <div className="border-b p-2 flex justify-between">
+        <Link
+          href={'/stats'}
+          className={buttonVariants({ variant: 'outline' })}
+        >
+          Celkové statistiky
+        </Link>
+        <div className="flex flex-col gap-2 sm:flex-row items-center justify-end">
+          {session?.user && (
+            <div className="flex-col sm:flex-row flex gap-2 w-full sm:w-fit">
+              <Link
+                href={'/create-match'}
+                className={buttonVariants({ className: 'w-full md:w-fit' })}
+              >
+                Vytvořit zápas
+              </Link>
+              <Link
+                href={'/edit-lineup'}
+                className={buttonVariants({
+                  variant: 'edit',
+                  className: 'w-full md:w-fit',
+                })}
+              >
+                Upravit sestavu
+              </Link>
+            </div>
+          )}
+          <AuthButton />
+        </div>
       </div>
 
       {matches?.length === 0 && (
@@ -75,7 +74,11 @@ export default async function Home() {
               </Link>
               {session?.user && (
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full justify-around">
-                  <DeleteDialog id={match._id!} className="w-full" />
+                  <DeleteDialog
+                    id={match._id!}
+                    className="w-full"
+                    matchName={match.matchName}
+                  />
                   <Link
                     href={`/update-match/${match._id}`}
                     className={buttonVariants({

@@ -5,6 +5,13 @@ export type Player = {
   score?: string
 }
 
+export type PlayerStats = {
+  playerName: string
+  totalScore: string
+  numberOfMatches: number
+  averageScore?: string
+}
+
 export type MatchType = {
   _id?: string
   matchName: string
@@ -16,6 +23,7 @@ export type MatchType = {
     playerName: string
     totalScore: number
   }>
+  createdAt: Date
 }
 
 export type MatchTable = {

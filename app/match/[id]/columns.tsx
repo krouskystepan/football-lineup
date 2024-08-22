@@ -42,12 +42,16 @@ export const MatchTableColumns: ColumnDef<MatchTable>[] = [
       )
     },
     cell: ({ row }) => {
-      const playerTotal = row.getValue('total')
+      const playerTotal = Number(row.getValue('total'))
+
+      const isBadScore = playerTotal <= 50_000 ? 'text-destructive' : ''
+      const isMediumScore =
+        playerTotal <= 80_000 && playerTotal > 50_000 ? 'text-amber-600' : ''
+      const isGoodScore = playerTotal > 1_000_000 ? 'text-lime-700' : ''
 
       return (
-        <div className="ml-4">
-          {formatNumberToReadableString(Number(playerTotal))}
-          {/* {formatNumberToReadableString(Math.floor(Number(playerTotal) * 100))} */}
+        <div className={`ml-4 ${isBadScore} ${isMediumScore} ${isGoodScore} `}>
+          {formatNumberToReadableString(playerTotal)}
         </div>
       )
     },

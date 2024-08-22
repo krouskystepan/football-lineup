@@ -14,9 +14,11 @@ import { buttonVariants } from './ui/button'
 export function DeleteDialog({
   id,
   className,
+  matchName,
 }: {
   id: string
   className?: string
+  matchName: string
 }) {
   return (
     <AlertDialog>
@@ -32,7 +34,8 @@ export function DeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Jsi si jistý? </AlertDialogTitle>
           <AlertDialogDescription>
-            Tato akce smaže zápas natrvalo z naši databáze. Akce je nevratná.
+            Tato akce smaže zápas <span className="font-bold">{matchName}</span>{' '}
+            natrvalo z naši databáze. Akce je nevratná.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
