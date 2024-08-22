@@ -50,7 +50,9 @@ export const MatchTableColumns: ColumnDef<MatchTable>[] = [
       const isGoodScore = playerTotal > 1_000_000 ? 'text-lime-700' : ''
 
       return (
-        <div className={`ml-4 ${isBadScore} ${isMediumScore} ${isGoodScore} `}>
+        <div
+          className={`ml-4 font-semibold ${isBadScore} ${isMediumScore} ${isGoodScore} `}
+        >
           {formatNumberToReadableString(playerTotal)}
         </div>
       )

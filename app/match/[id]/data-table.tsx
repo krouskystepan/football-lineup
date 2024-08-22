@@ -16,6 +16,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -30,6 +31,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { ChevronDown } from 'lucide-react'
+import { calculateLineSums, formatNumberToReadableString } from '@/lib/utils'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -59,6 +61,22 @@ export function DataTable<TData, TValue>({
       columnVisibility,
     },
   })
+
+  const lineKeys = [
+    'line1',
+    'line2',
+    'line3',
+    'line4',
+    'line5',
+    'line6',
+    'line7',
+    'line8',
+    'line9',
+    'line10',
+    'line11',
+  ]
+
+  const lineSums = calculateLineSums(data, lineKeys)
 
   return (
     <div>
@@ -149,6 +167,21 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell>Celkem</TableCell>
+              {lineKeys.map((key) => (
+                <TableCell key={key}>
+                  {formatNumberToReadableString(lineSums[`${key}Sum`])}
+                </TableCell>
+              ))}
+              <TableCell>
+                <div className="ml-4 font-semibold">
+                  {formatNumberToReadableString(lineSums.totalSum)}
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableFooter>
         </Table>
       </div>
     </div>

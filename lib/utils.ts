@@ -82,3 +82,29 @@ export function convertToNumber(input: string): number {
 
   return number
 }
+
+export function calculateLineSums(
+  data: any[],
+  lineKeys: string[]
+): Record<string, number> {
+  // Initialize sums object dynamically
+  const sums = lineKeys.reduce((acc, key) => {
+    acc[`${key}Sum`] = 0
+    return acc
+  }, {} as Record<string, number>)
+
+  // Compute line sums
+  data.forEach((player: any) => {
+    lineKeys.forEach((key) => {
+      sums[`${key}Sum`] += player[key] || 0
+    })
+  })
+
+  // Compute total sum separately and add it to the sums object
+  sums.totalSum = data.reduce(
+    (total: number, player: any) => total + (player.total || 0),
+    0
+  )
+
+  return sums
+}
