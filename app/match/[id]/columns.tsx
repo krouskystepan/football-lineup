@@ -20,9 +20,9 @@ export const MatchTableColumns: ColumnDef<MatchTable>[] = [
       const lineScore = row.getValue(`line${i + 1}`)
       return (
         <div>
-          {lineScore !== undefined
+          {lineScore !== 0
             ? formatNumberToReadableString(Number(lineScore))
-            : '—'}
+            : '-'}
         </div>
       )
     },
