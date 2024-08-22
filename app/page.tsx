@@ -19,7 +19,8 @@ export default async function Home() {
   const parsedMatches: MatchType[] = JSON.parse(matches)
 
   parsedMatches.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) =>
+      new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
   )
 
   return (

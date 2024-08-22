@@ -23,7 +23,7 @@ export type MatchType = {
     playerName: string
     totalScore: number
   }>
-  createdAt: Date
+  createdAt?: Date
 }
 
 export type MatchTable = {
