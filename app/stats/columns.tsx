@@ -37,11 +37,17 @@ export const columns: ColumnDef<Payment>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => (
-      <div className="ml-6">
-        {formatNumberToReadableString(row.getValue('averageScore'))}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const averageScore = Number(row.getValue('averageScore'))
+
+      const isBadScore = averageScore <= 50_000 ? 'text-destructive' : ''
+
+      return (
+        <div className={`ml-6 ${isBadScore}`}>
+          {formatNumberToReadableString(averageScore)}
+        </div>
+      )
+    },
   },
   {
     accessorKey: 'totalScore',
