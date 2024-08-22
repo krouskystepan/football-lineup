@@ -42,6 +42,11 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
     },
+    initialState: {
+      pagination: {
+        pageSize: 10,
+      },
+    },
   })
 
   return (

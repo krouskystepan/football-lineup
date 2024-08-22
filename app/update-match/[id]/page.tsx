@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -150,7 +151,7 @@ export default function UpdateMatch({
   if (loading) return <div>Loading...</div>
 
   return (
-    <main className="max-w-7xl mx-auto my-8">
+    <main className="max-w-7xl mx-auto my-8 px-4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex justify-center items-center mb-6 ">
@@ -165,6 +166,9 @@ export default function UpdateMatch({
                   <FormControl>
                     <Input placeholder="Zadej jméno zápasu" {...field} />
                   </FormControl>
+                  <FormDescription>
+                    Zadávej jméno zápasu ve formátu: "Jméno zápasu (Země)"
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -190,7 +194,7 @@ export default function UpdateMatch({
                           <FormLabel>{player.name}</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Zadej skóre"
+                              placeholder="Skóre"
                               {...field}
                               className={`${
                                 lineIndex === player.defaultLine - 1

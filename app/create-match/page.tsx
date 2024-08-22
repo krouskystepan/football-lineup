@@ -11,6 +11,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
@@ -136,7 +137,7 @@ export default function CreateMatch() {
   }
 
   return (
-    <main className="max-w-7xl mx-auto my-8">
+    <main className="max-w-7xl mx-auto my-8 px-4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex justify-center items-center mb-6 ">
@@ -151,6 +152,9 @@ export default function CreateMatch() {
                   <FormControl>
                     <Input placeholder="Zadej jméno zápasu" {...field} />
                   </FormControl>
+                  <FormDescription>
+                    Zadávej jméno zápasu ve formátu: "Jméno zápasu (Země)"
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

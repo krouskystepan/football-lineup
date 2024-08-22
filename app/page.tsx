@@ -61,39 +61,53 @@ export default async function Home() {
       )}
 
       <div className="grid-cols-1 md:grid-cols-5 gap-4 grid p-4">
-        {parsedMatches.map((match) => (
-          <div key={match._id} className="border p-4 min-w-full sm:min-w-80">
-            <div className="flex gap-2 sm:gap-4 justify-between flex-col">
-              <h2 className="text-2xl sm:text-3xl font-bold text-center">
-                {match.matchName}
-              </h2>
-              <Link
-                href={`/match/${match._id}`}
-                className={buttonVariants({ variant: 'outline' })}
-              >
-                Detail Zápasu
-              </Link>
-              {session?.user && (
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full justify-around">
-                  <DeleteDialog
-                    id={match._id!}
-                    className="w-full"
-                    matchName={match.matchName}
-                  />
-                  <Link
-                    href={`/update-match/${match._id}`}
-                    className={buttonVariants({
-                      variant: 'secondary',
-                      className: 'w-full',
-                    })}
-                  >
-                    Aktualizovat
-                  </Link>
+        {parsedMatches.map((match) => {
+          const splitedName = match.matchName.match(/^(.*)\s\((.*)\)$/)
+
+          if (!splitedName) return
+
+          const name = splitedName[1]
+          const country = splitedName[2]
+
+          return (
+            <div key={match._id} className="border p-4 min-w-full sm:min-w-80">
+              <div className="flex gap-2 sm:gap-4 justify-between flex-col">
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-center line-clamp-1 mb-1">
+                    {name}
+                  </h2>
+                  <h2 className="text-lg sm:text-xl font-semibold text-center line-clamp-1">
+                    {`(${country})`}
+                  </h2>
                 </div>
-              )}
+                <Link
+                  href={`/match/${match._id}`}
+                  className={buttonVariants({ variant: 'outline' })}
+                >
+                  Detail Zápasu
+                </Link>
+                {session?.user && (
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full justify-around">
+                    <DeleteDialog
+                      id={match._id!}
+                      className="w-full"
+                      matchName={match.matchName}
+                    />
+                    <Link
+                      href={`/update-match/${match._id}`}
+                      className={buttonVariants({
+                        variant: 'secondary',
+                        className: 'w-full',
+                      })}
+                    >
+                      Aktualizovat
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </main>
   )
