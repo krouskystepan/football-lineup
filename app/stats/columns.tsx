@@ -11,14 +11,30 @@ export const columns: ColumnDef<PlayerStats>[] = [
     accessorKey: 'playerName',
     enableHiding: false,
     header: 'Jméno',
-    cell: ({ row }) => {
-      const name = row.getValue('playerName')
-
+    cell: ({ row }) => (
+      <div className={!row.original.isActive ? 'text-destructive' : ''}>
+        {row.getValue('playerName')}
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'level',
+    id: 'Level',
+    header: ({ column }) => {
       return (
-        <div className={!row.original.isActive ? 'text-destructive' : ''}>
-          {`${name} ${row.original.level ? `(${row.original.level})` : ''}`}
-        </div>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Level
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
       )
+    },
+    cell: ({ row }) => {
+      const level = Number(row.getValue('Level'))
+
+      return <div className="ml-6">{level ? level : '-'}</div>
     },
   },
   {

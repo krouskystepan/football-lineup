@@ -76,8 +76,6 @@ export default function Lineup() {
     fetchLineups()
   }, [form])
 
-  console.log(form.formState.errors)
-
   async function onSubmit(values: FormValues) {
     try {
       await updateLineup(values.players)

@@ -55,6 +55,7 @@ export function DataTable<TData, TValue>({
       },
       columnVisibility: {
         Síla: false,
+        Level: false,
       },
     },
   })
