@@ -50,7 +50,7 @@ export default async function MatchDetail({
   })
 
   return (
-    <section className="mx-auto max-w-6xl min-h-dvh flex items-center justify-center p-2">
+    <section className="mx-auto max-w-7xl min-h-dvh flex items-center justify-center p-2">
       <div className="border p-4 w-full rounded-sm">
         <DataTable columns={MatchTableColumns} data={tableData} />
       </div>

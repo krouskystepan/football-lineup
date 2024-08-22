@@ -7,14 +7,20 @@ export default function SignOutButton() {
   const { data: session } = useSession()
 
   return (
-    <div>
+    <>
       {session ? (
-        <Button onClick={() => signOut()} variant={'destructive'}>
+        <Button
+          onClick={() => signOut()}
+          variant={'destructive'}
+          className="w-full sm:w-fit"
+        >
           Odhlásit se
         </Button>
       ) : (
-        <Button onClick={() => signIn()}>Přihlásit se</Button>
+        <Button onClick={() => signIn()} className="w-full sm:w-fit">
+          Přihlásit se
+        </Button>
       )}
-    </div>
+    </>
   )
 }

@@ -47,6 +47,7 @@ export const MatchTableColumns: ColumnDef<MatchTable>[] = [
       return (
         <div className="ml-4">
           {formatNumberToReadableString(Number(playerTotal))}
+          {/* {formatNumberToReadableString(Math.floor(Number(playerTotal) * 100))} */}
         </div>
       )
     },

@@ -33,21 +33,25 @@ export default async function Home() {
 
   return (
     <main>
-      <div className="flex gap-5 items-cente justify-end border-b p-2">
+      <div className="flex flex-col gap-2 sm:flex-row items-center justify-end border-b p-2">
         {session?.user && (
-          <>
-            <Link href={'/create-match'} className={buttonVariants()}>
+          <div className="flex-col sm:flex-row flex gap-2 w-full sm:w-fit">
+            <Link
+              href={'/create-match'}
+              className={buttonVariants({ className: 'w-full md:w-fit' })}
+            >
               Vytvořit zápas
             </Link>
             <Link
               href={'/edit-lineup'}
               className={buttonVariants({
                 variant: 'edit',
+                className: 'w-full md:w-fit',
               })}
             >
               Upravit sestavu
             </Link>
-          </>
+          </div>
         )}
         <AuthButton />
       </div>
@@ -58,9 +62,9 @@ export default async function Home() {
 
       <div className="grid-cols-1 md:grid-cols-5 gap-4 grid p-4">
         {parsedMatches.map((match) => (
-          <div key={match._id} className="border p-4">
-            <div className="flex gap-4 justify-between flex-col">
-              <h2 className="text-3xl font-bold text-center">
+          <div key={match._id} className="border p-4 min-w-full sm:min-w-80">
+            <div className="flex gap-2 sm:gap-4 justify-between flex-col">
+              <h2 className="text-2xl sm:text-3xl font-bold text-center">
                 {match.matchName}
               </h2>
               <Link
@@ -70,7 +74,7 @@ export default async function Home() {
                 Detail Zápasu
               </Link>
               {session?.user && (
-                <div className="flex gap-4 w-full justify-around">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full justify-around">
                   <DeleteDialog id={match._id!} className="w-full" />
                   <Link
                     href={`/update-match/${match._id}`}
