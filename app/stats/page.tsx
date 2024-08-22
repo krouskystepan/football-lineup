@@ -12,7 +12,7 @@ export default async function StatsPage() {
   const parsedStats = JSON.parse(stats)
 
   return (
-    <div className="max-w-3xl mx-auto py-10">
+    <div className="max-w-3xl mx-auto py-10 p-4">
       <DataTable columns={columns} data={parsedStats} />
     </div>
   )
