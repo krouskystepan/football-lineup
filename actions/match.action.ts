@@ -80,6 +80,10 @@ export async function getAllTimeStats() {
 
     const activeLineups = new Set(lineups.map((lineup) => lineup.name))
 
+    const activeLineupMap = new Map<string, number>(
+      lineups.map((lineup) => [lineup.name, lineup.level])
+    )
+
     const playerStatsMap = new Map<string, PlayerStats>()
 
     matches.forEach((match) => {
@@ -99,10 +103,12 @@ export async function getAllTimeStats() {
 
           const score = parseFloat(player.totalScore)
           const isActive = activeLineups.has(player.playerName)
+          const level = activeLineupMap.get(player.playerName) || 0
 
           if (!playerStatsMap.has(player.playerName)) {
             playerStatsMap.set(player.playerName, {
               playerName: player.playerName,
+              level: level,
               totalScore: '0',
               numberOfMatches: 0,
               isActive: isActive,
@@ -122,14 +128,20 @@ export async function getAllTimeStats() {
       (playerStats) => !playerStats.playerName.includes('Junior')
     )
 
-    const finalStats = allTimeStats.map((playerStats) => ({
-      ...playerStats,
-      averageScore: playerStats.numberOfMatches
-        ? (
-            parseFloat(playerStats.totalScore) / playerStats.numberOfMatches
-          ).toFixed(2)
-        : '0',
-    }))
+    const finalStats = allTimeStats.map((playerStats) => {
+      const averageScore = playerStats.numberOfMatches
+        ? parseFloat(playerStats.totalScore) / playerStats.numberOfMatches
+        : 0
+
+      const logLevel = playerStats.level > 0 ? Math.log(playerStats.level) : 0
+      const logWeightedAverage = averageScore * logLevel
+
+      return {
+        ...playerStats,
+        averageScore: averageScore.toFixed(2),
+        logWeightedAverage: logWeightedAverage.toFixed(2),
+      }
+    })
 
     revalidatePath('/')
     return JSON.stringify(finalStats)

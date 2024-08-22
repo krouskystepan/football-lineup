@@ -9,6 +9,8 @@ export type PlayerStats = {
   playerName: string
   totalScore: string
   numberOfMatches: number
+  level: number
+  logWeightedAverage?: number
   averageScore?: string
   isActive?: boolean
 }
@@ -37,4 +39,5 @@ export type LineupType = {
   _id?: string
   name: string
   defaultLine: number
+  level: number
 }

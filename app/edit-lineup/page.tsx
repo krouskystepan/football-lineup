@@ -24,6 +24,7 @@ const formSchema = z.object({
     z.object({
       _id: z.string(),
       name: z.string(),
+      level: z.coerce.number().positive(),
       defaultLine: z.coerce.number().positive(),
     })
   ),
@@ -50,9 +51,11 @@ export default function Lineup() {
         if (!fetchedLineups) return
 
         const parsedLineups: LineupType[] = JSON.parse(fetchedLineups)
+
         const processedLineups = parsedLineups.map((lineup) => ({
           _id: lineup._id,
           name: lineup.name,
+          level: lineup.level,
           defaultLine: lineup.defaultLine,
         }))
 
@@ -73,6 +76,8 @@ export default function Lineup() {
     fetchLineups()
   }, [form])
 
+  console.log(form.formState.errors)
+
   async function onSubmit(values: FormValues) {
     try {
       await updateLineup(values.players)
@@ -90,45 +95,53 @@ export default function Lineup() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="py-4 flex flex-wrap flex-auto gap-4 w-full"
-      >
-        <FormField
-          control={form.control}
-          name="players"
-          render={({ field }) => (
-            <>
-              {field.value.map((player, index) => (
-                <div
-                  key={player._id || index}
-                  className="border p-4 rounded-md grow space-y-2"
-                >
-                  <FormItem>
-                    <FormLabel>Jméno</FormLabel>
-                    <FormControl>
-                      <Input {...form.register(`players.${index}.name`)} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                  <FormItem>
-                    <FormLabel>Default Line</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...form.register(`players.${index}.defaultLine`)}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </div>
-              ))}
-            </>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="py-4 w-full">
+        <div className="grid grid-cols-6 gap-4">
+          <FormField
+            control={form.control}
+            name="players"
+            render={({ field }) => (
+              <>
+                {field.value.map((player, index) => (
+                  <div
+                    key={player._id || index}
+                    className="border p-4 rounded-md grow space-y-2 [&:nth-last-child(4)]:col-start-2"
+                  >
+                    <FormItem>
+                      <FormLabel>Jméno</FormLabel>
+                      <FormControl>
+                        <Input {...form.register(`players.${index}.name`)} />
+                      </FormControl>
+                    </FormItem>
+                    <div className="flex gap-2">
+                      <FormItem>
+                        <FormLabel>Default Line</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...form.register(`players.${index}.defaultLine`)}
+                          />
+                        </FormControl>
+                      </FormItem>
+                      <FormItem>
+                        <FormLabel>Level</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...form.register(`players.${index}.level`)}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+          />
+        </div>
         <Button
           type="submit"
-          className="w-full"
+          className="w-full mt-2"
           disabled={form.formState.isSubmitting}
         >
           Odeslat

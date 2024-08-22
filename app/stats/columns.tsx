@@ -9,6 +9,7 @@ import { ArrowUpDown } from 'lucide-react'
 export const columns: ColumnDef<PlayerStats>[] = [
   {
     accessorKey: 'playerName',
+    enableHiding: false,
     header: 'Jméno',
     cell: ({ row }) => {
       return (
@@ -20,6 +21,7 @@ export const columns: ColumnDef<PlayerStats>[] = [
   },
   {
     accessorKey: 'numberOfMatches',
+    enableHiding: false,
     header: 'Počet zápasů',
     cell: ({ row }) => (
       <div className="ml-4">{row.getValue('numberOfMatches')}</div>
@@ -27,6 +29,7 @@ export const columns: ColumnDef<PlayerStats>[] = [
   },
   {
     accessorKey: 'averageScore',
+    enableHiding: false,
     header: ({ column }) => {
       return (
         <Button
@@ -51,7 +54,34 @@ export const columns: ColumnDef<PlayerStats>[] = [
     },
   },
   {
+    accessorKey: 'logWeightedAverage',
+    id: 'Log. vážený průměr',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Log. vážený průměr
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const logWeightedAverage = Number(row.getValue('Log. vážený průměr'))
+
+      return (
+        <div className={`ml-6`}>
+          {logWeightedAverage
+            ? formatNumberToReadableString(logWeightedAverage)
+            : '-'}
+        </div>
+      )
+    },
+  },
+  {
     accessorKey: 'totalScore',
+    enableHiding: false,
     header: ({ column }) => {
       return (
         <Button

@@ -12,7 +12,7 @@ export default async function StatsPage() {
   const parsedStats = JSON.parse(stats)
 
   return (
-    <div className="max-w-3xl mx-auto p-4 mt-2">
+    <div className="max-w-4xl mx-auto p-4 mt-2">
       <h2 className="mb-4 text-3xl font-semibold text-center">
         Celkové statistiky
       </h2>

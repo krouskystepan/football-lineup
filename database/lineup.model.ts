@@ -3,6 +3,7 @@ import { Schema, model, models, Document } from 'mongoose'
 export interface ILineup extends Document {
   name: string
   defaultLine: number
+  level: number
 }
 
 const LineupSchema = new Schema({
@@ -11,6 +12,10 @@ const LineupSchema = new Schema({
     required: true,
   },
   defaultLine: {
+    type: Number,
+    required: true,
+  },
+  level: {
     type: Number,
     required: true,
   },
