@@ -126,7 +126,11 @@ export default function Lineup() {
             </>
           )}
         />
-        <Button type="submit" className="w-full">
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={form.formState.isSubmitting}
+        >
           Odeslat
         </Button>
       </form>

@@ -199,9 +199,7 @@ export default function CreateMatch() {
             .reverse()}
           <Button
             type="submit"
-            disabled={
-              form.formState.isSubmitting || form.formState.isSubmitSuccessful
-            }
+            disabled={form.formState.isSubmitting}
             className="w-full"
           >
             Odeslat
