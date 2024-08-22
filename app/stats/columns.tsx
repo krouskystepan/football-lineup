@@ -16,7 +16,7 @@ export const columns: ColumnDef<PlayerStats>[] = [
 
       return (
         <div className={!row.original.isActive ? 'text-destructive' : ''}>
-          {`${name} (${row.original.level})`}
+          {`${name} ${row.original.level ? `(${row.original.level})` : ''}`}
         </div>
       )
     },
