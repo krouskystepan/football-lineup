@@ -169,12 +169,14 @@ export function DataTable<TData, TValue>({
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell>Celkem</TableCell>
-              {lineKeys.map((key) => (
-                <TableCell key={key}>
-                  {formatNumberToReadableString(lineSums[`${key}Sum`])}
-                </TableCell>
-              ))}
+              <TableCell className="font-semibold">Celkem</TableCell>
+              {lineKeys
+                .filter((key) => table.getColumn(key)?.getIsVisible() ?? false)
+                .map((key) => (
+                  <TableCell key={key} className="font-semibold">
+                    {formatNumberToReadableString(lineSums[`${key}Sum`])}
+                  </TableCell>
+                ))}
               <TableCell>
                 <div className="ml-4 font-semibold">
                   {formatNumberToReadableString(lineSums.totalSum)}

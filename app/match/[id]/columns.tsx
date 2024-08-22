@@ -35,6 +35,7 @@ export const MatchTableColumns: ColumnDef<MatchTable>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="font-semibold"
         >
           Celkem
           <ArrowUpDown className="ml-2 h-4 w-4" />
