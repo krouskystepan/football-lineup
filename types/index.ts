@@ -10,8 +10,8 @@ export type PlayerStats = {
   totalScore: string
   numberOfMatches: number
   level: number
-  logWeightedAverage?: number
   averageScore?: string
+  scorePerLevel?: number
   isActive?: boolean
 }
 

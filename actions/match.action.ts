@@ -133,13 +133,15 @@ export async function getAllTimeStats() {
         ? parseFloat(playerStats.totalScore) / playerStats.numberOfMatches
         : 0
 
-      const logLevel = playerStats.level > 0 ? Math.log(playerStats.level) : 0
-      const logWeightedAverage = averageScore * logLevel
+      const scorePerLevel =
+        playerStats.level > 0
+          ? parseFloat(playerStats.totalScore) / playerStats.level
+          : 0
 
       return {
         ...playerStats,
         averageScore: averageScore.toFixed(2),
-        logWeightedAverage: logWeightedAverage.toFixed(2),
+        scorePerLevel: scorePerLevel.toFixed(2),
       }
     })
 

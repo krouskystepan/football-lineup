@@ -12,9 +12,11 @@ export const columns: ColumnDef<PlayerStats>[] = [
     enableHiding: false,
     header: 'Jméno',
     cell: ({ row }) => {
+      const name = row.getValue('playerName')
+
       return (
         <div className={!row.original.isActive ? 'text-destructive' : ''}>
-          {row.getValue('playerName')}
+          {`${name} (${row.original.level})`}
         </div>
       )
     },
@@ -54,27 +56,25 @@ export const columns: ColumnDef<PlayerStats>[] = [
     },
   },
   {
-    accessorKey: 'logWeightedAverage',
-    id: 'Log. vážený průměr',
+    accessorKey: 'scorePerLevel',
+    id: 'Síla',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Log. vážený průměr
+          Síla
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }) => {
-      const logWeightedAverage = Number(row.getValue('Log. vážený průměr'))
+      const scorePerLevel = Number(row.getValue('Síla'))
 
       return (
         <div className={`ml-6`}>
-          {logWeightedAverage
-            ? formatNumberToReadableString(logWeightedAverage)
-            : '-'}
+          {scorePerLevel ? formatNumberToReadableString(scorePerLevel) : '-'}
         </div>
       )
     },

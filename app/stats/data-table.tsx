@@ -53,9 +53,6 @@ export function DataTable<TData, TValue>({
       pagination: {
         pageSize: 10,
       },
-      columnVisibility: {
-        'Log. vážený průměr': false,
-      },
     },
   })
 
