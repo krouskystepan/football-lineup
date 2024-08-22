@@ -35,13 +35,3 @@ export async function getLineups() {
     console.error('Error getting lineups:', error)
   }
 }
-
-export async function getLineupById(id: string) {
-  try {
-    await connectToDatabase()
-    const lineup = await Lineup.findById(id)
-    return JSON.stringify(lineup)
-  } catch (error) {
-    console.error('Error getting lineup by id:', error)
-  }
-}

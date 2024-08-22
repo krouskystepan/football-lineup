@@ -2,20 +2,21 @@
 
 import { Button } from '@/components/ui/button'
 import { formatNumberToReadableString } from '@/lib/utils'
+import { PlayerStats } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 
-export type Payment = {
-  id: string
-  name: string
-  total: number
-}
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<PlayerStats>[] = [
   {
     accessorKey: 'playerName',
     header: 'Jméno',
-    cell: ({ row }) => <div>{row.getValue('playerName')}</div>,
+    cell: ({ row }) => {
+      return (
+        <div className={!row.original.isActive ? 'text-destructive' : ''}>
+          {row.getValue('playerName')}
+        </div>
+      )
+    },
   },
   {
     accessorKey: 'numberOfMatches',

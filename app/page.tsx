@@ -25,7 +25,7 @@ export default async function Home() {
 
   return (
     <main>
-      <div className="border-b p-2 flex justify-between">
+      <div className="border-b p-2 flex justify-between flex-col sm:flex-row gap-2">
         <Link
           href={'/stats'}
           className={buttonVariants({ variant: 'outline' })}

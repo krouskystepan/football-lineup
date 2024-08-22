@@ -1,5 +1,6 @@
 'use server'
 
+import Lineup from '@/database/lineup.model'
 import Match from '@/database/match.model'
 import { connectToDatabase } from '@/lib/db'
 import { isLoggedIn } from '@/lib/utils'
@@ -72,12 +73,18 @@ export async function getAllTimeStats() {
   try {
     await connectToDatabase()
 
-    const matches = await Match.find({})
+    const [matches, lineups] = await Promise.all([
+      Match.find({}),
+      Lineup.find({}),
+    ])
 
-    // This will store the player stats including total score, number of matches, and average score
-    const allTimeStats = matches.reduce((acc: PlayerStats[], match) => {
+    const activeLineups = new Set(lineups.map((lineup) => lineup.name))
+
+    const playerStatsMap = new Map<string, PlayerStats>()
+
+    matches.forEach((match) => {
       if (!match.total || !Array.isArray(match.total)) {
-        return acc
+        return
       }
 
       match.total.forEach(
@@ -86,62 +93,41 @@ export async function getAllTimeStats() {
             return
           }
 
-          const score = parseFloat(player.totalScore) // Convert to number
+          if (player.playerName.includes('Junior')) {
+            return
+          }
 
-          // Find the player stats in the accumulator
-          const playerStats = acc.find(
-            (p) => p.playerName === player.playerName
-          )
+          const score = parseFloat(player.totalScore)
+          const isActive = activeLineups.has(player.playerName)
 
-          if (playerStats) {
-            // Update total score and increment number of matches
-            playerStats.totalScore = (
-              parseFloat(playerStats.totalScore) + score
-            ).toFixed(2) // Convert to string with 2 decimal places
-            playerStats.numberOfMatches += 1
-          } else {
-            acc.push({
+          if (!playerStatsMap.has(player.playerName)) {
+            playerStatsMap.set(player.playerName, {
               playerName: player.playerName,
-              totalScore: score.toFixed(2), // Initialize totalScore as string
-              numberOfMatches: 1, // Initialize number of matches
+              totalScore: '0',
+              numberOfMatches: 0,
+              isActive: isActive,
             })
           }
+
+          const playerStats = playerStatsMap.get(player.playerName)!
+          playerStats.totalScore = (
+            parseFloat(playerStats.totalScore) + score
+          ).toFixed(2)
+          playerStats.numberOfMatches += 1
         }
       )
+    })
 
-      return acc
-    }, [])
-
-    // Aggregate the stats to ensure we have the final totals
-    const aggregatedStats = allTimeStats.reduce(
-      (acc: PlayerStats[], playerStats) => {
-        const existingPlayer = acc.find(
-          (p) => p.playerName === playerStats.playerName
-        )
-
-        if (existingPlayer) {
-          // Aggregate total score and number of matches
-          existingPlayer.totalScore = (
-            parseFloat(existingPlayer.totalScore) +
-            parseFloat(playerStats.totalScore)
-          ).toFixed(2) // Convert to string with 2 decimal places
-          existingPlayer.numberOfMatches += playerStats.numberOfMatches
-        } else {
-          acc.push(playerStats)
-        }
-
-        return acc
-      },
-      []
+    const allTimeStats = Array.from(playerStatsMap.values()).filter(
+      (playerStats) => !playerStats.playerName.includes('Junior')
     )
 
-    // Calculate average score per match for each player
-    const finalStats = aggregatedStats.map((playerStats) => ({
+    const finalStats = allTimeStats.map((playerStats) => ({
       ...playerStats,
       averageScore: playerStats.numberOfMatches
         ? (
             parseFloat(playerStats.totalScore) / playerStats.numberOfMatches
-          ).toFixed(2) // Calculate average and convert to string
+          ).toFixed(2)
         : '0',
     }))
 

@@ -10,6 +10,7 @@ export type PlayerStats = {
   totalScore: string
   numberOfMatches: number
   averageScore?: string
+  isActive?: boolean
 }
 
 export type MatchType = {
