@@ -66,30 +66,13 @@ export function formatScore(value: string): string {
   return parseScore(value).toString()
 }
 
-export function formatNumberToReadableString(
-  number: number,
-  rounded = false
-): string {
-  let formattedNumber: number
-
-  if (rounded) {
-    if (number >= 1_000_000) {
-      formattedNumber = Math.ceil(number / 1_000_000)
-      return formattedNumber + 'M'
-    } else if (number >= 1_000) {
-      formattedNumber = Math.ceil(number / 1_000)
-      return formattedNumber + 'k'
-    } else {
-      return Math.ceil(number).toString()
-    }
+export function formatNumberToReadableString(number: number): string {
+  if (number >= 1_000_000) {
+    return (number / 1_000_000).toFixed(2) + 'M'
+  } else if (number >= 1_000) {
+    return (number / 1_000).toFixed(2) + 'k'
   } else {
-    if (number >= 1_000_000) {
-      return (number / 1_000_000).toFixed(2) + 'M'
-    } else if (number >= 1_000) {
-      return (number / 1_000).toFixed(2) + 'k'
-    } else {
-      return number.toString()
-    }
+    return number.toString()
   }
 }
 

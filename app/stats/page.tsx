@@ -3,6 +3,7 @@ import { columns } from './columns'
 import { DataTable } from './data-table'
 import { MatchChart } from '@/components/MatchChart'
 import { Separator } from '@/components/ui/separator'
+import { formatNumberToReadableString } from '@/lib/utils'
 
 export default async function StatsPage() {
   const allTimePlayerStats = await getAllTimeStats()

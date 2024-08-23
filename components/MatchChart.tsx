@@ -30,12 +30,11 @@ export function MatchChart({
   matches: { matchName: string; totalScore: number }[]
 }) {
   const maxScore = Math.max(...matches.map((match) => match.totalScore))
-  const adjustedMaxScore = maxScore * 1.1
+  const adjustedMaxScore = Math.ceil(maxScore * 1.1)
 
-  const calculateBarchartWidth = (numberOfItem: number) => {
-    if (numberOfItem > 9) return numberOfItem * 100
-    return '100%'
-  }
+  const magnitude = Math.pow(10, Math.floor(Math.log10(adjustedMaxScore)))
+
+  const roundedMaxScore = Math.ceil(adjustedMaxScore / magnitude) * magnitude
 
   return (
     <ResponsiveContainer
@@ -58,8 +57,8 @@ export function MatchChart({
             tickLine={true}
             tickMargin={10}
             axisLine={true}
-            domain={[0, adjustedMaxScore]}
-            tickFormatter={(value) => formatNumberToReadableString(value, true)}
+            domain={[0, roundedMaxScore]}
+            tickFormatter={(value) => formatNumberToReadableString(value)}
           />
           <ChartTooltip
             content={<ChartTooltipContent className="px-2" hideIndicator />}
