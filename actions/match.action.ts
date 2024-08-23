@@ -69,6 +69,43 @@ export async function getMatches() {
   }
 }
 
+export async function getMatchStats() {
+  try {
+    await connectToDatabase()
+
+    const matches: MatchType[] = await Match.find({})
+
+    const matchStats = matches
+      .map((match) => {
+        if (!match.total || !Array.isArray(match.total)) {
+          return
+        }
+
+        const totalScore = match.total.reduce((acc: number, playerStats) => {
+          const score =
+            typeof playerStats.totalScore === 'number'
+              ? playerStats.totalScore
+              : 0
+          return acc + score
+        }, 0)
+
+        return {
+          matchName: match.matchName,
+          totalScore: totalScore.toFixed(0),
+        }
+      })
+      .filter(
+        (stat): stat is { matchName: string; totalScore: string } =>
+          stat !== undefined
+      )
+
+    revalidatePath('/')
+    return JSON.stringify(matchStats)
+  } catch (error) {
+    console.error('Error fetching match stats:', error)
+  }
+}
+
 export async function getAllTimeStats() {
   try {
     await connectToDatabase()
