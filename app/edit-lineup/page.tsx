@@ -150,10 +150,10 @@ export default function Lineup() {
             )}
           />
         </div>
-        <div className="mt-2 flex gap-2">
+        <div className="mt-3 flex gap-2 flex-col md:flex-row">
           <Button
             type="button"
-            className="w-1/5 mt-2"
+            className="w-full md:w-1/4"
             onClick={autoSortLines}
             variant={'outline'}
           >
@@ -161,7 +161,7 @@ export default function Lineup() {
           </Button>
           <Button
             type="submit"
-            className="w-full mt-2"
+            className="w-full"
             disabled={form.formState.isSubmitting}
           >
             Odeslat

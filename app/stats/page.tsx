@@ -27,7 +27,9 @@ export default async function StatsPage() {
         <h2 className="mb-4 text-3xl font-semibold text-center">
           Celkové statistiky
         </h2>
-        <DataTable columns={columns} data={parsedAllTimePlayerStats} />
+        <div className="border p-4 w-full rounded-sm">
+          <DataTable columns={columns} data={parsedAllTimePlayerStats} />
+        </div>
       </div>
       <Separator />
       <div className="hidden min-[320px]:block">
