@@ -8,7 +8,7 @@ export default function SignOutButton() {
 
   return (
     <>
-      {session ? (
+      {session?.user ? (
         <Button
           onClick={() => signOut()}
           variant={'destructive'}
