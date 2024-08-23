@@ -60,7 +60,7 @@ export default function Lineup() {
         }))
 
         const sortedLineups = processedLineups
-          .sort((a, b) => a.defaultLine - b.defaultLine)
+          .sort((a, b) => a.level - b.level)
           .reverse()
 
         form.reset({
@@ -87,14 +87,27 @@ export default function Lineup() {
     }
   }
 
+  const autoSortLines = () => {
+    const sortedPlayers = [...form.getValues('players')].sort(
+      (a, b) => b.level - a.level
+    )
+    const totalLines = Math.ceil(sortedPlayers.length / 2)
+
+    sortedPlayers.forEach((player, index) => {
+      player.defaultLine = totalLines - Math.floor(index / 2)
+    })
+
+    form.setValue('players', sortedPlayers)
+  }
+
   if (loading) {
     return <div>Loading...</div>
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="py-4 w-full">
-        <div className="grid grid-cols-1 min-[460px]:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 px-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="py-4 px-4 w-full">
+        <div className="grid grid-cols-1 min-[460px]:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           <FormField
             control={form.control}
             name="players"
@@ -137,13 +150,23 @@ export default function Lineup() {
             )}
           />
         </div>
-        <Button
-          type="submit"
-          className="w-full mt-2"
-          disabled={form.formState.isSubmitting}
-        >
-          Odeslat
-        </Button>
+        <div className="mt-2 flex gap-2">
+          <Button
+            type="button"
+            className="w-1/5 mt-2"
+            onClick={autoSortLines}
+            variant={'outline'}
+          >
+            Seřadit lajny podle lvlu
+          </Button>
+          <Button
+            type="submit"
+            className="w-full mt-2"
+            disabled={form.formState.isSubmitting}
+          >
+            Odeslat
+          </Button>
+        </div>
       </form>
     </Form>
   )
