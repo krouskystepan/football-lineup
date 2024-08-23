@@ -1,6 +1,13 @@
 'use client'
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from 'recharts'
 
 import {
   ChartConfig,
@@ -12,7 +19,7 @@ import { formatNumberToReadableString } from '@/lib/utils'
 
 const chartConfig = {
   totalScore: {
-    label: 'Zápas',
+    label: 'Celkové skóre',
     color: 'hsl(var(--primary))',
   },
 } satisfies ChartConfig
@@ -22,9 +29,16 @@ export function MatchChart({
 }: {
   matches: { matchName: string; totalScore: number }[]
 }) {
+  const maxScore = Math.max(...matches.map((match) => match.totalScore))
+  const adjustedMaxScore = maxScore * 1.1
+
   return (
-    <div className="border p-4 rounded-md">
-      <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+    <ResponsiveContainer
+      width="100%"
+      height={440}
+      className="border p-4 rounded-md overflow-hidden"
+    >
+      <ChartContainer config={chartConfig}>
         <BarChart accessibilityLayer data={matches}>
           <CartesianGrid vertical={false} />
           <XAxis
@@ -32,24 +46,22 @@ export function MatchChart({
             tickLine={false}
             tickMargin={10}
             axisLine={false}
+            tickFormatter={(value: string) => value.split(' ')[0].toUpperCase()}
           />
           <YAxis
             dataKey="totalScore"
-            tickLine={false}
+            tickLine={true}
             tickMargin={10}
-            axisLine={false}
-            tickFormatter={(value) => formatNumberToReadableString(value)}
+            axisLine={true}
+            domain={[0, adjustedMaxScore]}
+            tickFormatter={(value) => formatNumberToReadableString(value, true)}
           />
           <ChartTooltip
             content={<ChartTooltipContent className="px-2" hideIndicator />}
           />
-          <Bar
-            dataKey="totalScore"
-            fill="var(--color-totalScore)"
-            radius={10}
-          />
+          <Bar dataKey="totalScore" fill="var(--color-totalScore)" radius={5} />
         </BarChart>
       </ChartContainer>
-    </div>
+    </ResponsiveContainer>
   )
 }

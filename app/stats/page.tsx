@@ -15,6 +15,11 @@ export default async function StatsPage() {
   const parsedAllTimePlayerStats = JSON.parse(allTimePlayerStats)
   const parsedMatchesStats = JSON.parse(matchesStats)
 
+  parsedMatchesStats.sort(
+    (a: any, b: any) =>
+      new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+  )
+
   return (
     <div className="max-w-4xl mx-auto p-4 my-4 space-y-4">
       <div>

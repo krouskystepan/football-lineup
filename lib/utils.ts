@@ -16,73 +16,6 @@ export async function isLoggedIn() {
   return session
 }
 
-function parseScore(value: string): number {
-  // Normalize input: replace commas with periods for decimal places
-  value = value.replace(',', '.')
-
-  // Remove any spaces
-  value = value.replace(/[\s,]/g, '')
-
-  // Extract numeric part
-  let num = parseFloat(value.replace(/[^0-9.]/g, ''))
-
-  // Apply multiplier based on suffix
-  if (value.toLowerCase().includes('k')) {
-    num *= 1000
-  } else if (value.toLowerCase().includes('m')) {
-    num *= 1000000
-  }
-
-  return Math.floor(num)
-}
-
-export function formatScore(value: string): string {
-  return parseScore(value).toString()
-}
-
-export function formatNumberToReadableString(number: number): string {
-  if (number >= 1_000_000) {
-    return (number / 1_000_000).toFixed(2) + 'M'
-  } else if (number >= 1_000) {
-    return (number / 1_000).toFixed(2) + 'k'
-  } else {
-    return number.toString()
-  }
-}
-
-export function convertToNumber(input: string): number {
-  // Trim any whitespace and convert to lowercase
-  const trimmedInput = input.trim().toLowerCase()
-
-  // Replace commas with dots for decimal parsing
-  const normalizedInput = trimmedInput.replace(',', '.')
-
-  // Regular expression to match patterns like "4k", "5.3k", "2.3k", etc.
-  const match = normalizedInput.match(/^(\d+(\.\d+)?)(k|m)?$/)
-
-  if (!match) {
-    throw new Error('Invalid input format')
-  }
-
-  const [_, numberPart, __, suffix] = match
-  let number = parseFloat(numberPart)
-
-  // Apply the appropriate multiplier based on the suffix
-  switch (suffix) {
-    case 'k':
-      number *= 1000
-      break
-    case 'm':
-      number *= 1000000
-      break
-    // No suffix means the number is already in its final form
-    default:
-      break
-  }
-
-  return number
-}
-
 export function calculateLineSums(
   data: any[],
   lineKeys: string[]
@@ -107,4 +40,83 @@ export function calculateLineSums(
   )
 
   return sums
+}
+
+function parseScore(value: string): number {
+  // Normalize input: replace commas with periods for decimal places
+  value = value.replace(',', '.')
+
+  // Remove any spaces
+  value = value.replace(/[\s,]/g, '')
+
+  // Extract numeric part
+  let num = parseFloat(value.replace(/[^0-9.]/g, ''))
+
+  // Apply multiplier based on suffix
+  if (value.toLowerCase().includes('k')) {
+    num *= 1000
+  } else if (value.toLowerCase().includes('m')) {
+    num *= 1000000
+  }
+
+  return Math.floor(num)
+}
+
+export function formatScore(value: string): string {
+  return parseScore(value).toString()
+}
+
+export function formatNumberToReadableString(
+  number: number,
+  rounded = false
+): string {
+  let formattedNumber: number
+
+  if (rounded) {
+    if (number >= 1_000_000) {
+      formattedNumber = Math.ceil(number / 1_000_000)
+      return formattedNumber + 'M'
+    } else if (number >= 1_000) {
+      formattedNumber = Math.ceil(number / 1_000)
+      return formattedNumber + 'k'
+    } else {
+      return Math.ceil(number).toString()
+    }
+  } else {
+    if (number >= 1_000_000) {
+      return (number / 1_000_000).toFixed(2) + 'M'
+    } else if (number >= 1_000) {
+      return (number / 1_000).toFixed(2) + 'k'
+    } else {
+      return number.toString()
+    }
+  }
+}
+
+export function convertToNumber(input: string): number {
+  const trimmedInput = input.trim().toLowerCase()
+
+  const normalizedInput = trimmedInput.replace(',', '.')
+
+  const match = normalizedInput.match(/^(\d+(\.\d+)?)(k|m)?$/)
+
+  if (!match) {
+    throw new Error('Invalid input format')
+  }
+
+  const [_, numberPart, __, suffix] = match
+  let number = parseFloat(numberPart)
+
+  switch (suffix) {
+    case 'k':
+      number *= 1000
+      break
+    case 'm':
+      number *= 1000000
+      break
+    default:
+      break
+  }
+
+  return number
 }

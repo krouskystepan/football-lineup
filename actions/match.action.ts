@@ -92,10 +92,13 @@ export async function getMatchStats() {
         return {
           matchName: match.matchName,
           totalScore: totalScore.toFixed(0),
+          createdAt: match.createdAt,
         }
       })
       .filter(
-        (stat): stat is { matchName: string; totalScore: string } =>
+        (
+          stat
+        ): stat is { matchName: string; totalScore: string; createdAt: Date } =>
           stat !== undefined
       )
 

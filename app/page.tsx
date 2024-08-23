@@ -64,10 +64,8 @@ export default async function Home() {
         {parsedMatches.map((match) => {
           const splitedName = match.matchName.match(/^(.*)\s\((.*)\)$/)
 
-          if (!splitedName) return
-
-          const name = splitedName[1]
-          const country = splitedName[2]
+          const name = splitedName ? splitedName[1] : match.matchName
+          const country = splitedName ? splitedName[2] : ''
 
           return (
             <div key={match._id} className="border p-4 min-w-full sm:min-w-80">
@@ -76,9 +74,11 @@ export default async function Home() {
                   <h2 className="text-2xl sm:text-3xl font-bold text-center line-clamp-1 mb-1">
                     {name}
                   </h2>
-                  <h2 className="text-lg sm:text-xl font-semibold text-center line-clamp-1">
-                    {`(${country})`}
-                  </h2>
+                  {country && (
+                    <h2 className="text-lg sm:text-xl font-semibold text-center line-clamp-1">
+                      {`(${country})`}
+                    </h2>
+                  )}
                 </div>
                 <Link
                   href={`/match/${match._id}`}
