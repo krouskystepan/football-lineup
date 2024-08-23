@@ -94,7 +94,7 @@ export default function Lineup() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="py-4 w-full">
-        <div className="grid grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 min-[460px]:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 px-4">
           <FormField
             control={form.control}
             name="players"
@@ -103,7 +103,7 @@ export default function Lineup() {
                 {field.value.map((player, index) => (
                   <div
                     key={player._id || index}
-                    className="border p-4 rounded-md grow space-y-2 [&:nth-last-child(4)]:col-start-2"
+                    className="border p-4 rounded-md grow space-y-2 lg:[&:nth-last-child(2)]:col-start-2 xl:[&:nth-last-child(2)]:col-auto xl:[&:nth-last-child(4)]:col-start-2"
                   >
                     <FormItem>
                       <FormLabel>Jméno</FormLabel>
@@ -113,7 +113,7 @@ export default function Lineup() {
                     </FormItem>
                     <div className="flex gap-2">
                       <FormItem>
-                        <FormLabel>Default Line</FormLabel>
+                        <FormLabel>Line</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
