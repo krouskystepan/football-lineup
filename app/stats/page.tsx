@@ -29,11 +29,16 @@ export default async function StatsPage() {
         <DataTable columns={columns} data={parsedAllTimePlayerStats} />
       </div>
       <Separator />
-      <div>
+      <div className="hidden min-[320px]:block">
         <h2 className="mb-4 text-3xl font-semibold text-center">
           Statistiky zápasů
         </h2>
         <MatchChart matches={parsedMatchesStats} />
+      </div>
+      <div className="block min-[320px]:hidden">
+        <h2 className="mb-4 text-xl font-semibold text-center">
+          Statistiky zápasů json zobrazeny jen na širší obrazovce
+        </h2>
       </div>
     </div>
   )

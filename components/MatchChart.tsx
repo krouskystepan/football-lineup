@@ -32,11 +32,16 @@ export function MatchChart({
   const maxScore = Math.max(...matches.map((match) => match.totalScore))
   const adjustedMaxScore = maxScore * 1.1
 
+  const calculateBarchartWidth = (numberOfItem: number) => {
+    if (numberOfItem > 9) return numberOfItem * 100
+    return '100%'
+  }
+
   return (
     <ResponsiveContainer
-      width="100%"
       height={440}
-      className="border p-4 rounded-md overflow-hidden"
+      width="100%"
+      className="border p-4 rounded-md overflow-x-scroll min-w-96"
     >
       <ChartContainer config={chartConfig}>
         <BarChart accessibilityLayer data={matches}>
