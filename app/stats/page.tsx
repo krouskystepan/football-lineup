@@ -31,7 +31,6 @@ export default async function StatsPage() {
           <DataTable columns={columns} data={parsedAllTimePlayerStats} />
         </div>
       </div>
-      <Separator />
       <div className="hidden min-[320px]:block">
         <h2 className="mb-4 text-3xl font-semibold text-center">
           Statistiky zápasů
