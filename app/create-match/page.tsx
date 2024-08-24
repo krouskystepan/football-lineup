@@ -18,9 +18,18 @@ import { z } from 'zod'
 import { createMatch } from '@/actions/match.action'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { convertToNumber, formatScore } from '@/lib/utils'
+import { cn, convertToNumber, formatScore } from '@/lib/utils'
 import { LineupType, MatchType } from '@/types'
 import { getLineups } from '@/actions/lineup.action'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { CalendarIcon } from 'lucide-react'
+import { Calendar } from '@/components/ui/calendar'
+import { format } from 'date-fns'
+import { cs } from 'date-fns/locale'
 
 const formSchema = z.object({
   matchName: z.string().min(1, { message: 'Jméno zápasu je povinné' }),
@@ -37,6 +46,9 @@ const formSchema = z.object({
       line: z.coerce.number(),
     })
   ),
+  createdAt: z.date({
+    required_error: 'Datum zápasu je povinný',
+  }),
 })
 
 export default function CreateMatch() {
@@ -51,6 +63,7 @@ export default function CreateMatch() {
       lines: Array.from({ length: 11 }, (_, index) => ({
         line: index + 1,
         players: [],
+        createdAt: new Date().toISOString(),
       })),
     },
   })
@@ -140,12 +153,12 @@ export default function CreateMatch() {
     <main className="max-w-7xl mx-auto my-8 px-4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex justify-center items-center mb-6 ">
+          <div className="flex justify-center items-start mb-6 gap-4 flex-col sm:flex-row max-w-2xl mx-auto">
             <FormField
               control={form.control}
               name="matchName"
               render={({ field }) => (
-                <FormItem className="w-full md:w-1/3">
+                <FormItem className="w-full sm:w-2/3">
                   <FormLabel className="text-2xl font-bold">
                     Jméno zápasu
                   </FormLabel>
@@ -155,6 +168,50 @@ export default function CreateMatch() {
                   <FormDescription>
                     Zadávej jméno zápasu ve formátu: "Jméno zápasu (Země)"
                   </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="createdAt"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full sm:w-1/3">
+                  <FormLabel className="text-2xl font-bold">
+                    Datum zápasu
+                  </FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={'outline'}
+                          className={cn(
+                            'pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, 'PPP', { locale: cs })
+                          ) : (
+                            <span>Vyber datum</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date('1900-01-01')
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>Datum konání zápasu</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

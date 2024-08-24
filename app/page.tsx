@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { DeleteDialog } from '@/components/DeleteDialog'
 import AuthButton from '@/components/AuthButton'
 import { getServerSession } from 'next-auth'
+import { Badge } from '@/components/ui/badge'
 
 export const revalidate = 3600
 
@@ -60,15 +61,26 @@ export default async function Home() {
         <p className="text-2xl font-bold">Žádné zápasy</p>
       )}
 
-      <div className="grid-cols-1 md:grid-cols-5 gap-4 grid p-4">
+      <div className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 grid p-4">
         {parsedMatches.map((match) => {
           const splitedName = match.matchName.match(/^(.*)\s\((.*)\)$/)
 
           const name = splitedName ? splitedName[1] : match.matchName
           const country = splitedName ? splitedName[2] : ''
 
+          const matchDate = new Date(match.createdAt!).toLocaleDateString('cs')
+
           return (
-            <div key={match._id} className="border p-4 min-w-full sm:min-w-80">
+            <div
+              key={match._id}
+              className="relative border p-4 min-w-full sm:min-w-80"
+            >
+              <Badge
+                className="bg-background absolute top-[-12.5px] right-1/2 translate-x-1/2"
+                variant={'outline'}
+              >
+                {matchDate}
+              </Badge>
               <div className="flex gap-2 sm:gap-4 justify-between flex-col">
                 <div>
                   <h2 className="text-2xl sm:text-3xl font-bold text-center line-clamp-1 mb-1">
