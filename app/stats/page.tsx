@@ -2,8 +2,6 @@ import { getAllTimeStats, getMatchStats } from '@/actions/match.action'
 import { columns } from './columns'
 import { DataTable } from './data-table'
 import { MatchChart } from '@/components/MatchChart'
-import { Separator } from '@/components/ui/separator'
-import { formatNumberToReadableString } from '@/lib/utils'
 
 export default async function StatsPage() {
   const allTimePlayerStats = await getAllTimeStats()
@@ -39,7 +37,7 @@ export default async function StatsPage() {
       </div>
       <div className="block min-[320px]:hidden">
         <h2 className="mb-4 text-xl font-semibold text-center">
-          Statistiky zápasů json zobrazeny jen na širší obrazovce
+          Statistiky zápasů jsou zobrazeny jen na širší obrazovce
         </h2>
       </div>
     </div>
