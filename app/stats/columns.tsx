@@ -115,4 +115,14 @@ export const columns: ColumnDef<PlayerStats>[] = [
       </div>
     ),
   },
+  {
+    accessorKey: 'isActive',
+    enableHiding: false,
+    header: 'Aktivní',
+    cell: ({ row }) => {
+      const isActive = row.getValue('isActive')
+
+      return <div className="ml-6">{isActive ? 'Ano' : 'Ne'}</div>
+    },
+  },
 ]

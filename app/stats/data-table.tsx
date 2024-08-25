@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import React from 'react'
+import { Settings } from 'lucide-react'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -65,23 +66,53 @@ export function DataTable<TData, TValue>({
       columnVisibility: {
         Síla: false,
         Level: false,
+        isActive: false,
       },
     },
   })
 
+  console.log(columnFilters)
+
   return (
     <>
       <div className="flex items-center justify-between pb-4">
-        <Input
-          placeholder="Filtrovat jména..."
-          value={
-            (table.getColumn('playerName')?.getFilterValue() as string) ?? ''
-          }
-          onChange={(event) =>
-            table.getColumn('playerName')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        <div className="flex gap-3">
+          <Input
+            placeholder="Filtrovat jména..."
+            value={
+              (table.getColumn('playerName')?.getFilterValue() as string) ?? ''
+            }
+            onChange={(event) =>
+              table.getColumn('playerName')?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant={'outline'}
+                size={'icon'}
+                className="aspect-square"
+              >
+                <Settings />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center">
+              <DropdownMenuCheckboxItem
+                className="capitalize"
+                checked={
+                  table.getColumn('isActive')?.getFilterValue() as boolean
+                }
+                onCheckedChange={(value) =>
+                  table.getColumn('isActive')?.setFilterValue(value ? true : '')
+                }
+              >
+                Pouze Aktivní Hráči
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">
