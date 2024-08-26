@@ -61,7 +61,25 @@ export function MatchChart({
             tickFormatter={(value) => formatNumberToReadableString(value)}
           />
           <ChartTooltip
-            content={<ChartTooltipContent className="px-2" hideIndicator />}
+            content={
+              <ChartTooltipContent
+                className="px-2"
+                labelFormatter={(value) => (
+                  <p className="text-center">{value}</p>
+                )}
+                formatter={(value) => (
+                  <>
+                    <div className="size-2.5 bg-primary" />
+                    <p className="text-muted-foreground font-medium ">
+                      Celkové skóre:{' '}
+                      <span className="text-foreground">
+                        {value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}
+                      </span>
+                    </p>
+                  </>
+                )}
+              />
+            }
           />
           <Bar dataKey="totalScore" fill="var(--color-totalScore)" radius={5} />
         </BarChart>
