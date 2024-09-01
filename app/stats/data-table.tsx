@@ -42,9 +42,12 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([
+    {
+      id: 'isActive',
+      value: true,
+    },
+  ])
 
   const table = useReactTable({
     data,
@@ -70,8 +73,6 @@ export function DataTable<TData, TValue>({
       },
     },
   })
-
-  console.log(columnFilters)
 
   return (
     <>
@@ -108,7 +109,7 @@ export function DataTable<TData, TValue>({
                   table.getColumn('isActive')?.setFilterValue(value ? true : '')
                 }
               >
-                Pouze Aktivní Hráči
+                Aktivní Hráči
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
