@@ -1,6 +1,12 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { formatNumberToReadableString } from '@/lib/utils'
 import { PlayerStats } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
@@ -76,13 +82,25 @@ export const columns: ColumnDef<PlayerStats>[] = [
     id: 'Síla',
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Síla
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                onClick={() =>
+                  column.toggleSorting(column.getIsSorted() === 'asc')
+                }
+              >
+                Síla
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="text-center">
+              <p className="font-bold">Výpočet:</p>
+              <p>Celkové skóre / level</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )
     },
     cell: ({ row }) => {
