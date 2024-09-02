@@ -27,7 +27,7 @@ const chartConfig = {
 export function MatchChart({
   matches,
 }: {
-  matches: { matchName: string; totalScore: number }[]
+  matches: { createdAt: Date; matchName: string; totalScore: number }[]
 }) {
   const maxScore = Math.max(...matches.map((match) => match.totalScore))
   const adjustedMaxScore = Math.ceil(maxScore * 1.1)
@@ -50,7 +50,18 @@ export function MatchChart({
             tickLine={false}
             tickMargin={10}
             axisLine={false}
-            tickFormatter={(value: string) => value.split(' ')[0].toUpperCase()}
+            tickFormatter={(value: string) => {
+              const matchDate = matches.find(
+                (match) => match.matchName === value
+              )
+
+              const date = matchDate
+                ? new Date(matchDate.createdAt)
+                : new Date()
+              const day = String(date.getDate()).padStart(2, '0')
+              const month = String(date.getMonth() + 1).padStart(2, '0')
+              return `${day}.${month}`
+            }}
           />
           <YAxis
             dataKey="totalScore"

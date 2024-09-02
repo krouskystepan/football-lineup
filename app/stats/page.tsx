@@ -1,7 +1,7 @@
 import { getAllTimeStats, getMatchStats } from '@/actions/match.action'
 import { columns } from './columns'
 import { DataTable } from './data-table'
-import { MatchChart } from '@/components/MatchChart'
+import { MatchChart } from './MatchChart'
 
 export default async function StatsPage() {
   const allTimePlayerStats = await getAllTimeStats()
