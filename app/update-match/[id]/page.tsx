@@ -18,9 +18,9 @@ import { z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { convertToNumber, formatScore } from '@/lib/utils'
-import { LineupType, MatchType } from '@/types'
+import { MatchType } from '@/types'
 import { getMatchById, updateMatch } from '@/actions/match.action'
-import { getLineups } from '@/actions/lineup.action'
+import { useLeavePageConfirm } from '@/hooks/useLeavePageConfirm'
 
 const formSchema = z.object({
   matchName: z.string().min(1, { message: 'Jméno zápasu je povinné' }),
@@ -46,7 +46,6 @@ export default function UpdateMatch({
 }) {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
-  // const [lineups, setLineups] = useState<LineupType[]>([])
   const [match, setMatch] = useState<MatchType>()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -60,20 +59,18 @@ export default function UpdateMatch({
     },
   })
 
+  useLeavePageConfirm(form.formState.isDirty)
+
   useEffect(() => {
     setLoading(true)
     async function fetchMatches() {
       try {
         const fetchedMatch = await getMatchById(id)
-        // const fetchedLineups = await getLineups()
 
         if (!fetchedMatch) return
-        // if (!fetchedLineups) return
 
         const parsedMatch: MatchType = JSON.parse(fetchedMatch)
-        // const parsedLineups: LineupType[] = JSON.parse(fetchedLineups)
 
-        // setLineups(parsedLineups)
         setMatch(parsedMatch)
 
         form.reset({

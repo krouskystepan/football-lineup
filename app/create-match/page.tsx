@@ -30,6 +30,7 @@ import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { format } from 'date-fns'
 import { cs } from 'date-fns/locale'
+import { useLeavePageConfirm } from '@/hooks/useLeavePageConfirm'
 
 const formSchema = z.object({
   matchName: z.string().min(1, { message: 'Jméno zápasu je povinné' }),
@@ -67,6 +68,8 @@ export default function CreateMatch() {
       })),
     },
   })
+
+  useLeavePageConfirm(form.formState.isDirty)
 
   useEffect(() => {
     setLoading(true)
