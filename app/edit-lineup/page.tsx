@@ -13,11 +13,11 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { useLeavePageConfirm } from '@/hooks/useLeavePageConfirm'
 
 const formSchema = z.object({
   players: z.array(
@@ -42,6 +42,8 @@ export default function Lineup() {
       players: [],
     },
   })
+
+  useLeavePageConfirm(form.formState.isDirty)
 
   useEffect(() => {
     async function fetchLineups() {
