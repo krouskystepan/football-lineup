@@ -174,9 +174,7 @@ export async function getAllTimeStats() {
         : 0
 
       const scorePerLevel =
-        playerStats.level > 0
-          ? parseFloat(playerStats.totalScore) / playerStats.level
-          : 0
+        playerStats.level > 0 ? averageScore / playerStats.level : 0
 
       return {
         ...playerStats,

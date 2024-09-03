@@ -29,7 +29,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import React from 'react'
 import { Settings } from 'lucide-react'
 
 interface DataTableProps<TData, TValue> {
@@ -41,8 +40,13 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: 'Level',
+      desc: true,
+    },
+  ])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     {
       id: 'isActive',
       value: true,
@@ -115,7 +119,7 @@ export function DataTable<TData, TValue>({
           </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="w-full sm:w-fit">
+              <Button variant="outline" className="w-full sm:w-fit">
                 Sloupce
               </Button>
             </DropdownMenuTrigger>

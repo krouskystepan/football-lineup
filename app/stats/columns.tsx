@@ -26,17 +26,17 @@ export const columns: ColumnDef<PlayerStats>[] = [
   {
     accessorKey: 'level',
     id: 'Level',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Level
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className={column.getIsSorted() ? 'text-primary' : ''}
+      >
+        Level
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+
     cell: ({ row }) => {
       const level = Number(row.getValue('Level'))
 
@@ -54,17 +54,17 @@ export const columns: ColumnDef<PlayerStats>[] = [
   {
     accessorKey: 'averageScore',
     enableHiding: false,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Průměrné skóre
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className={column.getIsSorted() ? 'text-primary' : ''}
+      >
+        Průměrné skóre
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+
     cell: ({ row }) => {
       const averageScore = Number(row.getValue('averageScore'))
 
@@ -80,31 +80,30 @@ export const columns: ColumnDef<PlayerStats>[] = [
   {
     accessorKey: 'scorePerLevel',
     id: 'Síla',
-    header: ({ column }) => {
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                onClick={() =>
-                  column.toggleSorting(column.getIsSorted() === 'asc')
-                }
-              >
-                Síla
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent className="text-center">
-              <p className="font-bold">Výpočet:</p>
-              <p>Celkové skóre / level</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )
-    },
+    header: ({ column }) => (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === 'asc')
+              }
+              className={column.getIsSorted() ? 'text-primary' : ''}
+            >
+              Síla
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent className="text-center">
+            <p className="font-bold">Výpočet:</p>
+            <p>Průměrné skóre / Level</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    ),
     cell: ({ row }) => {
-      const scorePerLevel = Number(row.getValue('Síla'))
+      const scorePerLevel = Math.ceil(Number(row.getValue('Síla')))
 
       return (
         <div className={`ml-6`}>
@@ -116,17 +115,16 @@ export const columns: ColumnDef<PlayerStats>[] = [
   {
     accessorKey: 'totalScore',
     enableHiding: false,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Celkové skóre
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className={column.getIsSorted() ? 'text-primary' : ''}
+      >
+        Celkové skóre
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => (
       <div className="ml-6">
         {formatNumberToReadableString(row.getValue('totalScore'))}
