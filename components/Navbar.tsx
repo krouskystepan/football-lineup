@@ -18,7 +18,9 @@ export default function Navbar() {
           href={'/stats'}
           className={buttonVariants({
             variant: 'outline',
-            className: 'w-full sm:w-1/2 md:w-fit',
+            className: `w-full sm:w-1/2 md:w-fit ${
+              pathname === '/stats' ? 'text-primary' : ''
+            }`,
           })}
         >
           Celkové statistiky
@@ -27,7 +29,9 @@ export default function Navbar() {
           href={'/'}
           className={buttonVariants({
             variant: 'outline',
-            className: 'w-full sm:w-1/2 md:w-fit',
+            className: `w-full sm:w-1/2 md:w-fit ${
+              pathname === '/' ? 'text-primary' : ''
+            }`,
           })}
         >
           Všechny zápasy
