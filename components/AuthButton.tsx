@@ -12,12 +12,12 @@ export default function SignOutButton() {
         <Button
           onClick={() => signOut()}
           variant={'destructive'}
-          className="w-full sm:w-fit"
+          className="w-full md:w-fit"
         >
           Odhlásit se
         </Button>
       ) : (
-        <Button onClick={() => signIn()} className="w-full sm:w-fit">
+        <Button onClick={() => signIn()} className="w-full md:w-fit">
           Přihlásit se
         </Button>
       )}

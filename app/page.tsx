@@ -3,7 +3,6 @@ import { buttonVariants } from '@/components/ui/button'
 import { MatchType } from '@/types'
 import Link from 'next/link'
 import { DeleteDialog } from '@/components/DeleteDialog'
-import AuthButton from '@/components/AuthButton'
 import { getServerSession } from 'next-auth'
 import { Badge } from '@/components/ui/badge'
 
@@ -26,37 +25,6 @@ export default async function Home() {
 
   return (
     <main>
-      <div className="border-b p-2 flex justify-between flex-col sm:flex-row gap-2">
-        <Link
-          href={'/stats'}
-          className={buttonVariants({ variant: 'outline' })}
-        >
-          Celkové statistiky
-        </Link>
-        <div className="flex flex-col gap-2 sm:flex-row items-center justify-end">
-          {session?.user && (
-            <div className="flex-col sm:flex-row flex gap-2 w-full sm:w-fit">
-              <Link
-                href={'/create-match'}
-                className={buttonVariants({ className: 'w-full md:w-fit' })}
-              >
-                Vytvořit zápas
-              </Link>
-              <Link
-                href={'/edit-lineup'}
-                className={buttonVariants({
-                  variant: 'edit',
-                  className: 'w-full md:w-fit',
-                })}
-              >
-                Upravit sestavu
-              </Link>
-            </div>
-          )}
-          <AuthButton />
-        </div>
-      </div>
-
       {matches?.length === 0 && (
         <p className="text-2xl font-bold">Žádné zápasy</p>
       )}
