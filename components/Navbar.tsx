@@ -3,9 +3,15 @@
 import Link from 'next/link'
 import React from 'react'
 import AuthButton from './AuthButton'
-import { buttonVariants } from './ui/button'
+import { Button, buttonVariants } from './ui/button'
 import { usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip'
 
 export default function Navbar() {
   const { data: session } = useSession()
@@ -58,6 +64,16 @@ export default function Navbar() {
                 })}
               >
                 Upravit sestavu
+              </Link>
+
+              <Link
+                href={'/seasons'}
+                className={buttonVariants({
+                  className:
+                    'w-full sm:w-1/2 min-[880px]:w-fit bg-sky-500 hover:bg-sky-500/90',
+                })}
+              >
+                Sezóny
               </Link>
             </div>
           )}
