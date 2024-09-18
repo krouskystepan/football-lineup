@@ -1,3 +1,7 @@
+// text-red-600
+// text-amber-600
+// text-lime-700
+
 import { type ClassValue, clsx } from 'clsx'
 import { getServerSession } from 'next-auth'
 import { twMerge } from 'tailwind-merge'
@@ -110,9 +114,8 @@ export function getScoreClass(
   mediumScore: number,
   goodScore: number
 ) {
-  if (playerTotal <= badScore) return 'text-destructive'
-  if (playerTotal > badScore && playerTotal <= mediumScore)
-    return 'text-amber-600'
-  if (playerTotal > goodScore) return 'text-lime-700'
+  if (playerTotal <= badScore) return 'badScore'
+  if (playerTotal > badScore && playerTotal <= mediumScore) return 'mediumScore'
+  if (playerTotal > goodScore) return 'goodScore'
   return ''
 }

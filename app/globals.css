@@ -67,3 +67,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.badScore {
+  @apply text-red-600;
+}
+
+.mediumScore {
+  @apply text-amber-600;
+}
+
+.goodScore {
+  @apply text-lime-700;
+}

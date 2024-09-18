@@ -3,8 +3,8 @@ export const SEASONS = [
     seasonName: 'Sezóna 10',
     startDate: '2024-07-25',
     endDate: '2024-08-23',
-    badScore: 50_000,
-    mediumScore: 80_000,
+    badScore: 30_000,
+    mediumScore: 60_000,
     goodScore: 1_000_000,
   },
   {
