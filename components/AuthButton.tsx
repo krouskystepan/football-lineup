@@ -12,12 +12,12 @@ export default function SignOutButton() {
         <Button
           onClick={() => signOut()}
           variant={'destructive'}
-          className="w-full md:w-fit"
+          className="w-full min-[880px]:w-fit"
         >
           Odhlásit se
         </Button>
       ) : (
-        <Button onClick={() => signIn()} className="w-full md:w-fit">
+        <Button onClick={() => signIn()} className="w-full min-[880px]:w-fit">
           Přihlásit se
         </Button>
       )}

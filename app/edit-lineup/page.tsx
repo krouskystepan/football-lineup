@@ -62,6 +62,7 @@ export default function Lineup() {
         }))
 
         const sortedLineups = processedLineups
+          .sort((a, b) => a.defaultLine - b.defaultLine)
           .sort((a, b) => a.level - b.level)
           .reverse()
 
@@ -89,19 +90,6 @@ export default function Lineup() {
     }
   }
 
-  const autoSortLines = () => {
-    const sortedPlayers = [...form.getValues('players')].sort(
-      (a, b) => b.level - a.level
-    )
-    const totalLines = Math.ceil(sortedPlayers.length / 2)
-
-    sortedPlayers.forEach((player, index) => {
-      player.defaultLine = totalLines - Math.floor(index / 2)
-    })
-
-    form.setValue('players', sortedPlayers)
-  }
-
   if (loading) {
     return <div>Loading...</div>
   }
@@ -121,7 +109,10 @@ export default function Lineup() {
                     className="border p-4 rounded-md grow space-y-2 lg:[&:nth-last-child(2)]:col-start-2 xl:[&:nth-last-child(2)]:col-auto xl:[&:nth-last-child(4)]:col-start-2"
                   >
                     <FormItem>
-                      <FormLabel>Jméno</FormLabel>
+                      <div className="flex justify-between">
+                        <FormLabel>Jméno</FormLabel>
+                        <FormLabel>Line {player.defaultLine}</FormLabel>
+                      </div>
                       <FormControl>
                         <Input {...form.register(`players.${index}.name`)} />
                       </FormControl>
@@ -152,23 +143,13 @@ export default function Lineup() {
             )}
           />
         </div>
-        <div className="mt-3 flex gap-2 flex-col md:flex-row">
-          <Button
-            type="button"
-            className="w-full md:w-1/4"
-            onClick={autoSortLines}
-            variant={'outline'}
-          >
-            Seřadit lajny podle lvlu
-          </Button>
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={form.formState.isSubmitting}
-          >
-            Odeslat
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          className="w-full mt-3"
+          disabled={form.formState.isSubmitting}
+        >
+          Odeslat
+        </Button>
       </form>
     </Form>
   )

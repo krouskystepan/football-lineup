@@ -33,6 +33,7 @@ export type MatchTable = {
   playerName: string
   [key: `line${number}`]: number | undefined
   total: number
+  totalClass?: string
 }
 
 export type LineupType = {
@@ -40,4 +41,14 @@ export type LineupType = {
   name: string
   defaultLine: number
   level: number
+}
+
+export type SeasonType = {
+  _id?: string
+  seasonNumber: number
+  startDate: string
+  endDate: string
+  badScore: number
+  mediumScore: number
+  goodScore: number
 }

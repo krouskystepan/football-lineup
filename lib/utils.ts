@@ -103,3 +103,16 @@ export function convertToNumber(input: string): number {
 
   return number
 }
+
+export function getScoreClass(
+  playerTotal: number,
+  badScore: number,
+  mediumScore: number,
+  goodScore: number
+) {
+  if (playerTotal <= badScore) return 'text-destructive'
+  if (playerTotal > badScore && playerTotal <= mediumScore)
+    return 'text-amber-600'
+  if (playerTotal > goodScore) return 'text-lime-700'
+  return ''
+}

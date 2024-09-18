@@ -1,26 +1,18 @@
-import { Player } from '@/types'
-
-// export const initialPlayers: Player[] = [
-//   { _id: '1', name: 'D4rzk', defaultLine: 11 },
-//   { _id: '2', name: 'Kangaroo66', defaultLine: 11 },
-//   { _id: '3', name: 'krasi1975', defaultLine: 10 },
-//   { _id: '4', name: 'Mino', defaultLine: 10 },
-//   { _id: '5', name: 'Pejda', defaultLine: 9 },
-//   { _id: '6', name: 'iVáclav', defaultLine: 9 },
-//   { _id: '7', name: 'cabrisk77', defaultLine: 8 },
-//   { _id: '8', name: 'Leoš', defaultLine: 8 },
-//   { _id: '9', name: 'Jiří', defaultLine: 7 },
-//   { _id: '10', name: 'Stony', defaultLine: 7 },
-//   { _id: '11', name: 'Rezzi', defaultLine: 6 },
-//   { _id: '12', name: 'Makovecz', defaultLine: 6 },
-//   { _id: '13', name: 'Mahtiel', defaultLine: 5 },
-//   { _id: '14', name: 'michal', defaultLine: 5 },
-//   { _id: '15', name: 'Milan123', defaultLine: 4 },
-//   { _id: '16', name: 'Alikovna', defaultLine: 4 },
-//   { _id: '17', name: 'Nedvěd', defaultLine: 3 },
-//   { _id: '18', name: 'nero82', defaultLine: 3 },
-//   { _id: '19', name: 'basters007', defaultLine: 2 },
-//   { _id: '20', name: 'Lukas227', defaultLine: 2 },
-//   { _id: '21', name: 'Jarin17', defaultLine: 1 },
-//   { _id: '22', name: 'Dandus', defaultLine: 1 },
-// ]
+export const SEASONS = [
+  {
+    seasonName: 'Sezóna 10',
+    startDate: '2024-07-25',
+    endDate: '2024-08-23',
+    badScore: 50_000,
+    mediumScore: 80_000,
+    goodScore: 1_000_000,
+  },
+  {
+    seasonName: 'Sezóna 11',
+    startDate: '2024-08-26',
+    endDate: '2024-09-24',
+    badScore: 60_000,
+    mediumScore: 90_000,
+    goodScore: 1_100_000,
+  },
+]

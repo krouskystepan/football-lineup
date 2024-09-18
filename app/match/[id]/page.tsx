@@ -2,6 +2,16 @@ import { getMatchById } from '@/actions/match.action'
 import { MatchType, MatchTable } from '@/types'
 import { MatchTableColumns } from './columns'
 import { DataTable } from './data-table'
+import { SEASONS } from '@/constants'
+import { getScoreClass } from '@/lib/utils'
+
+const getCurrentSeason = (matchDate: Date) => {
+  return SEASONS.find(
+    (season) =>
+      new Date(season.startDate) <= matchDate &&
+      new Date(season.endDate) >= matchDate
+  )
+}
 
 export default async function MatchDetail({
   params: { id },
@@ -15,9 +25,15 @@ export default async function MatchDetail({
   }
 
   const parsedMatch: MatchType = JSON.parse(match)
+  const matchDate = new Date(parsedMatch.createdAt || Date.now())
+
+  const currentSeason = getCurrentSeason(matchDate)
+
+  if (!currentSeason) {
+    return <div>No season data available for this match</div>
+  }
 
   const tableData: MatchTable[] = []
-
   const lines = parsedMatch.lines
   const total = parsedMatch.total
 
@@ -31,6 +47,12 @@ export default async function MatchDetail({
     const playerData: MatchTable = {
       playerName: player.playerName,
       total: player.totalScore,
+      totalClass: getScoreClass(
+        player.totalScore,
+        currentSeason.badScore,
+        currentSeason.mediumScore,
+        currentSeason.goodScore
+      ),
     }
 
     for (let i = 1; i <= 11; i++) {
@@ -46,7 +68,7 @@ export default async function MatchDetail({
   })
 
   return (
-    <section className="mx-auto max-w-7xl min-h-dvh flex items-center p-2 flex-col">
+    <section className="mx-auto max-w-fit min-h-dvh flex items-center p-2 flex-col">
       <h2 className="mb-2 text-3xl font-semibold">{parsedMatch.matchName}</h2>
       <div className="border p-4 w-full rounded-sm">
         <DataTable columns={MatchTableColumns} data={tableData} />
