@@ -205,7 +205,7 @@ export default function CreateSeason() {
         </div>
 
         <Button type="submit" className="w-full mt-3">
-          Submit
+          Odeslat
         </Button>
       </form>
     </Form>
