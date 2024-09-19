@@ -7,18 +7,21 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog'
-import DeleteButton from './DeleteButton'
 import { AlertDialogHeader, AlertDialogFooter } from './ui/alert-dialog'
 import { buttonVariants } from './ui/button'
+import DeleteMatchButton from './DeleteMatchButton'
+import DeleteSeasonButton from './DeleteSeasonButton'
 
 export function DeleteDialog({
   id,
   className,
-  matchName,
+  objectName,
+  type,
 }: {
   id: string
   className?: string
-  matchName: string
+  objectName: string
+  type: string
 }) {
   return (
     <AlertDialog>
@@ -34,15 +37,22 @@ export function DeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Jsi si jistý? </AlertDialogTitle>
           <AlertDialogDescription>
-            Tato akce smaže zápas <span className="font-bold">{matchName}</span>{' '}
+            Tato akce smaže <span className="font-bold">{objectName}</span>{' '}
             natrvalo z naši databáze. Akce je nevratná.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Zrušit</AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <DeleteButton id={String(id)} />
-          </AlertDialogAction>
+          {type === 'match' && (
+            <AlertDialogAction asChild>
+              <DeleteMatchButton id={id} />
+            </AlertDialogAction>
+          )}
+          {type === 'season' && (
+            <AlertDialogAction asChild>
+              <DeleteSeasonButton id={id} />
+            </AlertDialogAction>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

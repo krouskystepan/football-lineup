@@ -1,24 +1,35 @@
 import { getMatches } from '@/actions/match.action'
 import { buttonVariants } from '@/components/ui/button'
-import { MatchType } from '@/types'
+import { MatchType, SeasonType } from '@/types'
 import Link from 'next/link'
 import { DeleteDialog } from '@/components/DeleteDialog'
 import { getServerSession } from 'next-auth'
 import { Badge } from '@/components/ui/badge'
-import { SEASONS } from '@/constants'
+import { getSeasons } from '@/actions/season.action'
 
 export const revalidate = 3600
 
 export default async function Home() {
   const session = await getServerSession()
   const matches = await getMatches()
-  const parsedSeasons = SEASONS
+  const seasons = await getSeasons()
 
-  if (!matches || !parsedSeasons) {
+  if (!matches || !seasons) {
     return <div>loading...</div>
   }
 
   const parsedMatches: MatchType[] = JSON.parse(matches)
+  const parsedSeasons: SeasonType[] = JSON.parse(seasons).map(
+    (season: SeasonType) => ({
+      ...season,
+      date: {
+        from: new Date(season.date.from),
+        to: new Date(season.date.to),
+      },
+    })
+  )
+
+  parsedSeasons.sort((a, b) => a.date.from.getTime() - b.date.from.getTime())
 
   parsedMatches.sort(
     (a, b) =>
@@ -26,9 +37,10 @@ export default async function Home() {
   )
 
   const groupedMatchesBySeason = parsedSeasons.map((season) => {
-    const seasonStart = new Date(season.startDate)
-    const seasonEnd = new Date(season.endDate)
+    const seasonStart = new Date(season.date.from)
+    const seasonEnd = new Date(season.date.to)
 
+    // Filter matches for the current season
     const seasonMatches = parsedMatches.filter((match) => {
       const matchDate = new Date(match.createdAt!)
       return matchDate >= seasonStart && matchDate <= seasonEnd
@@ -40,6 +52,22 @@ export default async function Home() {
     }
   })
 
+  // Filter out matches that have been included in any season
+  const matchesInSeasons = groupedMatchesBySeason.flatMap(
+    (group) => group.matches
+  )
+
+  // Find matches that don't belong to any season
+  const restMatches = parsedMatches.filter(
+    (match) => !matchesInSeasons.includes(match)
+  )
+
+  // Add the "Rest" section
+  groupedMatchesBySeason.unshift({
+    seasonName: 'Ostatní',
+    matches: restMatches,
+  })
+
   return (
     <main className="mt-2">
       {groupedMatchesBySeason
@@ -48,7 +76,7 @@ export default async function Home() {
             <h2 className="text-3xl font-bold px-4">{seasonName}</h2>
 
             {matches.length === 0 ? (
-              <p className="text-xl font-semibold mb-2">Žádné zápasy</p>
+              <p className="text-xl font-semibold mb-2 p-4">Žádné zápasy</p>
             ) : (
               <div className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 grid p-4">
                 {matches.map((match) => {
@@ -94,7 +122,8 @@ export default async function Home() {
                             <DeleteDialog
                               id={match._id!}
                               className="w-full"
-                              matchName={match.matchName}
+                              objectName={match.matchName}
+                              type="match"
                             />
                             <Link
                               href={`/update-match/${match._id}`}

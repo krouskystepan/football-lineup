@@ -2,7 +2,7 @@ export type Player = {
   _id: string
   name: string
   defaultLine: number
-  score?: string
+  score?: number
 }
 
 export type PlayerStats = {
@@ -45,9 +45,11 @@ export type LineupType = {
 
 export type SeasonType = {
   _id?: string
-  seasonNumber: number
-  startDate: string
-  endDate: string
+  seasonName: string
+  date: {
+    from: Date
+    to: Date
+  }
   badScore: number
   mediumScore: number
   goodScore: number

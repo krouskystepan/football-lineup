@@ -18,7 +18,7 @@ import { z } from 'zod'
 import { createMatch } from '@/actions/match.action'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { cn, convertToNumber, formatScore } from '@/lib/utils'
+import { cn, convertToNumber } from '@/lib/utils'
 import { LineupType, MatchType } from '@/types'
 import { getLineups } from '@/actions/lineup.action'
 import {
@@ -135,7 +135,7 @@ export default function CreateMatch() {
           ...line,
           players: line.players.map((player) => ({
             ...player,
-            score: formatScore(player.score),
+            score: convertToNumber(player.score),
           })),
         })),
       }

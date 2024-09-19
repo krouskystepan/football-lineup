@@ -5,7 +5,7 @@ import { deleteMatch } from '@/actions/match.action'
 import { toast } from 'sonner'
 import { revalidatePath } from 'next/cache'
 
-export default function DeleteButton({ id }: { id: string }) {
+export default function DeleteMatchButton({ id }: { id: string }) {
   const handleDelete = async (matchId: string) => {
     try {
       await deleteMatch(matchId)

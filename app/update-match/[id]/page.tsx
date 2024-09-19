@@ -17,8 +17,8 @@ import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { convertToNumber, formatScore } from '@/lib/utils'
-import { MatchType } from '@/types'
+import { convertToNumber, formatNumberToReadableString } from '@/lib/utils'
+import { MatchType, Player } from '@/types'
 import { getMatchById, updateMatch } from '@/actions/match.action'
 import { useLeavePageConfirm } from '@/hooks/useLeavePageConfirm'
 
@@ -78,11 +78,11 @@ export default function UpdateMatch({
           lines: parsedMatch.lines.map((line) => ({
             line: line.line,
             players: line.players
-              .map((player) => {
+              .map((player: Player) => {
                 return {
                   _id: String(player._id),
                   name: player.name,
-                  score: player.score?.toString() ?? '0',
+                  score: formatNumberToReadableString(player.score!),
                   defaultLine: player.defaultLine,
                 }
               })
@@ -131,7 +131,7 @@ export default function UpdateMatch({
           ...line,
           players: line.players.map((player) => ({
             ...player,
-            score: formatScore(player.score),
+            score: convertToNumber(player.score),
           })),
         })),
       }
@@ -140,8 +140,8 @@ export default function UpdateMatch({
       toast.success('Zápas byl úspěšně aktualizován')
       router.push('/')
     } catch (error) {
-      toast.error('Zápas se nepodařilo aktualizovat')
       console.error(error)
+      toast.error(String(error))
     }
   }
 

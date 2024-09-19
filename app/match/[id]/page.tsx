@@ -1,15 +1,19 @@
 import { getMatchById } from '@/actions/match.action'
-import { MatchType, MatchTable } from '@/types'
+import { MatchType, MatchTable, SeasonType } from '@/types'
 import { MatchTableColumns } from './columns'
 import { DataTable } from './data-table'
-import { SEASONS } from '@/constants'
 import { getScoreClass } from '@/lib/utils'
+import { getSeasons } from '@/actions/season.action'
 
-const getCurrentSeason = (matchDate: Date) => {
-  return SEASONS.find(
+const getCurrentSeason = async (matchDate: Date) => {
+  const seasons = await getSeasons()
+
+  const parsedSeasons: SeasonType[] = JSON.parse(seasons)
+
+  return parsedSeasons.find(
     (season) =>
-      new Date(season.startDate) <= matchDate &&
-      new Date(season.endDate) >= matchDate
+      new Date(season.date.from) <= matchDate &&
+      new Date(season.date.to) >= matchDate
   )
 }
 
@@ -27,10 +31,16 @@ export default async function MatchDetail({
   const parsedMatch: MatchType = JSON.parse(match)
   const matchDate = new Date(parsedMatch.createdAt || Date.now())
 
-  const currentSeason = getCurrentSeason(matchDate)
+  let currentSeason = await getCurrentSeason(matchDate)
 
   if (!currentSeason) {
-    return <div>No season data available for this match</div>
+    currentSeason = {
+      seasonName: '',
+      date: { from: new Date(), to: new Date() },
+      badScore: 0,
+      mediumScore: 0,
+      goodScore: 0,
+    }
   }
 
   const tableData: MatchTable[] = []

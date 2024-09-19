@@ -4,7 +4,7 @@ import Lineup from '@/database/lineup.model'
 import Match from '@/database/match.model'
 import { connectToDatabase } from '@/lib/db'
 import { isLoggedIn } from '@/lib/utils'
-import { MatchType, Player, PlayerStats } from '@/types'
+import { MatchType, PlayerStats } from '@/types'
 import { revalidatePath } from 'next/cache'
 
 export async function createMatch(match: MatchType) {

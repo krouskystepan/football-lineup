@@ -2,6 +2,7 @@
 
 import Lineup from '@/database/lineup.model'
 import { connectToDatabase } from '@/lib/db'
+import { isLoggedIn } from '@/lib/utils'
 import { LineupType } from '@/types'
 import { revalidatePath } from 'next/cache'
 
@@ -17,6 +18,7 @@ import { revalidatePath } from 'next/cache'
 
 export async function updateLineup(players: LineupType[]) {
   try {
+    await isLoggedIn()
     await connectToDatabase()
     await Lineup.deleteMany({})
     await Lineup.create(players)

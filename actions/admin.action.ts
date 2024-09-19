@@ -19,23 +19,23 @@ export async function getAdmin({ username }: { username: string }) {
   }
 }
 
-export async function createAdmin({
-  username,
-  password,
-}: {
-  username: string
-  password: string
-}) {
-  try {
-    await isLoggedIn()
-    await connectToDatabase()
+// export async function createAdmin({
+//   username,
+//   password,
+// }: {
+//   username: string
+//   password: string
+// }) {
+//   try {
+//     await isLoggedIn()
+//     await connectToDatabase()
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+//     const hashedPassword = await bcrypt.hash(password, 10)
 
-    await Admin.create({ username, password: hashedPassword })
+//     await Admin.create({ username, password: hashedPassword })
 
-    revalidatePath('/')
-  } catch (error) {
-    console.error('Error creating admin:', error)
-  }
-}
+//     revalidatePath('/')
+//   } catch (error) {
+//     console.error('Error creating admin:', error)
+//   }
+// }
