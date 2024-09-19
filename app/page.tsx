@@ -40,7 +40,6 @@ export default async function Home() {
     const seasonStart = new Date(season.date.from)
     const seasonEnd = new Date(season.date.to)
 
-    // Filter matches for the current season
     const seasonMatches = parsedMatches.filter((match) => {
       const matchDate = new Date(match.createdAt!)
       return matchDate >= seasonStart && matchDate <= seasonEnd
@@ -52,21 +51,20 @@ export default async function Home() {
     }
   })
 
-  // Filter out matches that have been included in any season
   const matchesInSeasons = groupedMatchesBySeason.flatMap(
     (group) => group.matches
   )
 
-  // Find matches that don't belong to any season
   const restMatches = parsedMatches.filter(
     (match) => !matchesInSeasons.includes(match)
   )
 
-  // Add the "Rest" section
-  groupedMatchesBySeason.unshift({
-    seasonName: 'Ostatní',
-    matches: restMatches,
-  })
+  if (restMatches.length > 0) {
+    groupedMatchesBySeason.unshift({
+      seasonName: 'Ostatní',
+      matches: restMatches,
+    })
+  }
 
   return (
     <main className="mt-2">
