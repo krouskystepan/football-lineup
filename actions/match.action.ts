@@ -131,6 +131,9 @@ export async function getAllTimeStats() {
         return
       }
 
+      let motmPlayer: string | null = null
+      let highestScore = -Infinity
+
       match.total.forEach(
         (player: { playerName: string; totalScore: string }) => {
           if (!player.playerName || player.totalScore === undefined) {
@@ -142,6 +145,11 @@ export async function getAllTimeStats() {
           }
 
           const score = parseFloat(player.totalScore)
+          if (score > highestScore) {
+            highestScore = score
+            motmPlayer = player.playerName
+          }
+
           const isActive = activeLineups.has(player.playerName)
           const level = activeLineupMap.get(player.playerName) || 0
 
@@ -152,6 +160,7 @@ export async function getAllTimeStats() {
               totalScore: '0',
               numberOfMatches: 0,
               isActive: isActive,
+              motmCount: 0, // Initialize MOTM count
             })
           }
 
@@ -162,6 +171,12 @@ export async function getAllTimeStats() {
           playerStats.numberOfMatches += 1
         }
       )
+
+      // Increment MOTM count for the player with the highest score
+      if (motmPlayer && playerStatsMap.has(motmPlayer)) {
+        const playerStats = playerStatsMap.get(motmPlayer)!
+        playerStats.motmCount! += 1
+      }
     })
 
     const allTimeStats = Array.from(playerStatsMap.values()).filter(

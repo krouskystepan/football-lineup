@@ -52,6 +52,26 @@ export const columns: ColumnDef<PlayerStats>[] = [
     ),
   },
   {
+    accessorKey: 'motmCount',
+    id: 'Hráč zápasu',
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className={column.getIsSorted() ? 'text-primary' : ''}
+      >
+        MOTM
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+
+    cell: ({ row }) => {
+      const motm = Number(row.getValue('Hráč zápasu'))
+
+      return <div className="ml-6">{motm}</div>
+    },
+  },
+  {
     accessorKey: 'averageScore',
     enableHiding: false,
     header: ({ column }) => (
@@ -114,7 +134,7 @@ export const columns: ColumnDef<PlayerStats>[] = [
   },
   {
     accessorKey: 'totalScore',
-    enableHiding: false,
+    id: 'Celkové skóre',
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -127,7 +147,7 @@ export const columns: ColumnDef<PlayerStats>[] = [
     ),
     cell: ({ row }) => (
       <div className="ml-6">
-        {formatNumberToReadableString(row.getValue('totalScore'))}
+        {formatNumberToReadableString(row.getValue('Celkové skóre'))}
       </div>
     ),
   },

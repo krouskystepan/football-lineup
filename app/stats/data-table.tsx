@@ -74,6 +74,7 @@ export function DataTable<TData, TValue>({
         Síla: false,
         Level: false,
         isActive: false,
+        'Hráč zápasu': false,
       },
     },
   })

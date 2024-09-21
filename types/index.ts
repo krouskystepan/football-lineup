@@ -13,6 +13,7 @@ export type PlayerStats = {
   averageScore?: string
   scorePerLevel?: number
   isActive?: boolean
+  motmCount?: number
 }
 
 export type MatchType = {
