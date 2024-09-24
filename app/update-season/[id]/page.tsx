@@ -42,14 +42,13 @@ const FormSchema = z.object({
   goodScore: z.string().min(1, { message: 'Povinné' }),
 })
 
-export default function CreateSeason({
+export default function UpdateSeason({
   params: { id },
 }: {
   params: { id: string }
 }) {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
-  const [saeson, setSeason] = useState<SeasonType>()
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -73,8 +72,6 @@ export default function CreateSeason({
         if (!fetchedSeason) return
 
         const parsedSeason: SeasonType = JSON.parse(fetchedSeason)
-
-        setSeason(parsedSeason)
 
         form.reset({
           seasonName: parsedSeason.seasonName,
@@ -109,7 +106,7 @@ export default function CreateSeason({
         goodScore: convertToNumber(values.goodScore),
       }
 
-      await updateSeason(preparedValues.seasonName, preparedValues)
+      await updateSeason(id, preparedValues)
 
       toast.success('Sezóna byla úspěšně aktualizována')
       router.push('/seasons')
@@ -119,15 +116,15 @@ export default function CreateSeason({
     }
   }
 
+  if (loading) return <div>Loading...</div>
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="mt-4 mx-auto max-w-lg"
       >
-        <h2 className="font-bold text-2xl text-center">
-          Vytvořit novou sezónu
-        </h2>
+        <h2 className="font-bold text-2xl text-center">Upravit sezónu</h2>
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}

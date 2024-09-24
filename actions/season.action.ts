@@ -64,6 +64,7 @@ export async function updateSeason(id: string, season: SeasonType) {
     await connectToDatabase()
 
     const overlappingSeason = await Season.findOne({
+      _id: { $ne: id },
       $or: [
         {
           'date.from': { $lt: season.date.to },
@@ -76,7 +77,7 @@ export async function updateSeason(id: string, season: SeasonType) {
       throw new Error('A season with overlapping dates already exists.')
     }
 
-    await Season.updateOne({ id }, season)
+    await Season.findByIdAndUpdate(id, season, { new: true })
 
     revalidatePath('/seasons')
   } catch (error) {
