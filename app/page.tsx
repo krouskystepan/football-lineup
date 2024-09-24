@@ -85,7 +85,7 @@ export default async function Home() {
 
                   const matchDate = new Date(
                     match.createdAt!
-                  ).toLocaleDateString('cs')
+                  ).toLocaleDateString('cs', { timeZone: 'Europe/Prague' })
 
                   return (
                     <div

@@ -76,7 +76,7 @@ export default async function Seasons() {
                           Upravit
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
+                      <DropdownMenuItem className="!p-0">
                         <DeleteDialog
                           id={season._id!}
                           objectName={season.seasonName}
@@ -90,11 +90,15 @@ export default async function Seasons() {
               </div>
               <p>
                 <strong>Start:</strong>{' '}
-                {season.date.from.toLocaleDateString('cs')}
+                {season.date.from.toLocaleDateString('cs', {
+                  timeZone: 'Europe/Prague',
+                })}
               </p>
               <p>
                 <strong>Konec:</strong>{' '}
-                {season.date.to.toLocaleDateString('cs')}
+                {season.date.to.toLocaleDateString('cs', {
+                  timeZone: 'Europe/Prague',
+                })}
               </p>
               <p className="badScore pt-1">
                 <strong>Špatné skóre:</strong>{' '}
