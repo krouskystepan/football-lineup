@@ -68,7 +68,7 @@ export function DataTable<TData, TValue>({
     },
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 11,
       },
       columnVisibility: {
         Síla: false,

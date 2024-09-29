@@ -63,7 +63,6 @@ export default function Lineup() {
 
         const sortedLineups = processedLineups
           .sort((a, b) => a.defaultLine - b.defaultLine)
-          .sort((a, b) => a.level - b.level)
           .reverse()
 
         form.reset({

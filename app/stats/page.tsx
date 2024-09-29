@@ -14,12 +14,12 @@ export default async function StatsPage() {
   const parsedAllTimePlayerStats = JSON.parse(allTimePlayerStats)
   const parsedMatchesStats = JSON.parse(matchesStats)
 
-  parsedMatchesStats.sort(
-    (a: any, b: any) =>
-      new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
-  )
-
-  console.log(parsedAllTimePlayerStats)
+  const sortedMatches = parsedMatchesStats
+    .sort(
+      (a: any, b: any) =>
+        new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+    )
+    .slice(0, 5)
 
   return (
     <div className="max-w-4xl mx-auto p-4 mb-2 space-y-4">
@@ -33,9 +33,9 @@ export default async function StatsPage() {
       </div>
       <div className="hidden min-[320px]:block">
         <h2 className="mb-4 text-3xl font-semibold text-center">
-          Statistiky zápasů
+          Statistiky posledních 5 zápasů
         </h2>
-        <MatchChart matches={parsedMatchesStats} />
+        <MatchChart matches={sortedMatches} />
       </div>
       <div className="block min-[320px]:hidden">
         <h2 className="mb-4 text-xl font-semibold text-center">
