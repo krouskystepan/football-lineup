@@ -118,10 +118,10 @@ export async function getAllTimeStats() {
       Lineup.find({}),
     ])
 
-    const activeLineups = new Set(lineups.map((lineup) => lineup.name))
+    const activeLineups = new Set(lineups.map((lineup) => lineup.name.trim())) // Trim lineup names
 
     const activeLineupMap = new Map<string, number>(
-      lineups.map((lineup) => [lineup.name, lineup.level])
+      lineups.map((lineup) => [lineup.name.trim(), lineup.level]) // Trim lineup names
     )
 
     const playerStatsMap = new Map<string, PlayerStats>()
@@ -140,22 +140,24 @@ export async function getAllTimeStats() {
             return
           }
 
-          if (player.playerName.includes('Junior')) {
+          const playerName = player.playerName.trim() // Trim player names
+
+          if (playerName.includes('Junior')) {
             return
           }
 
           const score = parseFloat(player.totalScore)
           if (score > highestScore) {
             highestScore = score
-            motmPlayer = player.playerName
+            motmPlayer = playerName
           }
 
-          const isActive = activeLineups.has(player.playerName)
-          const level = activeLineupMap.get(player.playerName) || 0
+          const isActive = activeLineups.has(playerName)
+          const level = activeLineupMap.get(playerName) || 0
 
-          if (!playerStatsMap.has(player.playerName)) {
-            playerStatsMap.set(player.playerName, {
-              playerName: player.playerName,
+          if (!playerStatsMap.has(playerName)) {
+            playerStatsMap.set(playerName, {
+              playerName: playerName,
               level: level,
               totalScore: '0',
               numberOfMatches: 0,
@@ -164,7 +166,7 @@ export async function getAllTimeStats() {
             })
           }
 
-          const playerStats = playerStatsMap.get(player.playerName)!
+          const playerStats = playerStatsMap.get(playerName)!
           playerStats.totalScore = (
             parseFloat(playerStats.totalScore) + score
           ).toFixed(2)
