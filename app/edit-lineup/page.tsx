@@ -23,7 +23,7 @@ const formSchema = z.object({
   players: z.array(
     z.object({
       _id: z.string(),
-      name: z.string(),
+      name: z.string().trim(),
       level: z.coerce.number().positive(),
       defaultLine: z.coerce.number().positive(),
     })
