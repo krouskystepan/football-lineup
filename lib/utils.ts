@@ -57,7 +57,7 @@ export function formatNumberToReadableString(number: number): string {
 }
 
 export function convertToNumber(input: string): number {
-  const trimmedInput = input.trim().toLowerCase()
+  const trimmedInput = input.trim().toLowerCase().replace(/\s+/g, '')
 
   const normalizedInput = trimmedInput.replace(',', '.')
 
