@@ -88,10 +88,12 @@ export const columns: ColumnDef<PlayerStats>[] = [
     cell: ({ row }) => {
       const averageScore = Number(row.getValue('averageScore'))
 
-      const isBadScore = averageScore <= 50_000 ? 'text-destructive' : ''
+      const scoreClass = row.original.averageScoreClass
+        ? `${row.original.averageScoreClass} font-semibold`
+        : ''
 
       return (
-        <div className={`ml-6 ${isBadScore}`}>
+        <div className={`ml-6 ${scoreClass}`}>
           {formatNumberToReadableString(averageScore)}
         </div>
       )

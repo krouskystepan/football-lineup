@@ -14,6 +14,8 @@ export default async function StatsPage() {
   const parsedAllTimePlayerStats = JSON.parse(allTimePlayerStats)
   const parsedMatchesStats = JSON.parse(matchesStats)
 
+  // console.dir(parsedAllTimePlayerStats, { depth: Infinity })
+
   const sortedMatches = parsedMatchesStats
     .sort(
       (a: any, b: any) =>

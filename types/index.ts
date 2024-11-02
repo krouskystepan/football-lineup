@@ -11,6 +11,7 @@ export type PlayerStats = {
   numberOfMatches: number
   level: number
   averageScore?: string
+  averageScoreClass?: string
   scorePerLevel?: number
   isActive?: boolean
   motmCount?: number

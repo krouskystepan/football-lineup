@@ -3,9 +3,10 @@
 import Lineup from '@/database/lineup.model'
 import Match from '@/database/match.model'
 import { connectToDatabase } from '@/lib/db'
-import { isLoggedIn } from '@/lib/utils'
-import { MatchType, PlayerStats } from '@/types'
+import { getScoreClass, isLoggedIn } from '@/lib/utils'
+import { MatchType, PlayerStats, SeasonType } from '@/types'
 import { revalidatePath } from 'next/cache'
+import { getSeasons } from './season.action'
 
 export async function createMatch(match: MatchType) {
   try {
@@ -119,7 +120,6 @@ export async function getAllTimeStats() {
     ])
 
     const activeLineups = new Set(lineups.map((lineup) => lineup.name))
-
     const activeLineupMap = new Map<string, number>(
       lineups.map((lineup) => [lineup.name, lineup.level])
     )
@@ -182,23 +182,58 @@ export async function getAllTimeStats() {
       (playerStats) => !playerStats.playerName.includes('Junior')
     )
 
-    const finalStats = allTimeStats.map((playerStats) => {
-      const averageScore = playerStats.numberOfMatches
-        ? parseFloat(playerStats.totalScore) / playerStats.numberOfMatches
-        : 0
+    const seasons = await getSeasons()
+    const parsedSeasons =
+      typeof seasons === 'string' ? JSON.parse(seasons) : seasons
 
-      const scorePerLevel =
-        playerStats.level > 0 ? averageScore / playerStats.level : 0
+    if (Array.isArray(parsedSeasons)) {
+      const averageBadScore =
+        parsedSeasons.reduce(
+          (sum: number, season: SeasonType) => sum + season.badScore,
+          0
+        ) / parsedSeasons.length
 
-      return {
-        ...playerStats,
-        averageScore: averageScore.toFixed(2),
-        scorePerLevel: scorePerLevel.toFixed(2),
-      }
-    })
+      const averageMediumScore =
+        parsedSeasons.reduce(
+          (sum: number, season: SeasonType) => sum + season.mediumScore,
+          0
+        ) / parsedSeasons.length
 
-    revalidatePath('/')
-    return JSON.stringify(finalStats)
+      const averageGoodScore =
+        parsedSeasons.reduce(
+          (sum: number, season: SeasonType) => sum + season.goodScore,
+          0
+        ) / parsedSeasons.length
+
+      const finalStats = allTimeStats.map((playerStats) => {
+        const averageScore = playerStats.numberOfMatches
+          ? parseFloat(playerStats.totalScore) / playerStats.numberOfMatches
+          : 0
+
+        const scorePerLevel =
+          playerStats.level > 0 ? averageScore / playerStats.level : 0
+
+        // Calculate the class for the average score of each player
+        const scoreClass = getScoreClass(
+          averageScore,
+          averageBadScore,
+          averageMediumScore,
+          averageGoodScore
+        )
+
+        return {
+          ...playerStats,
+          averageScore: averageScore.toFixed(2),
+          scorePerLevel: scorePerLevel.toFixed(2),
+          averageScoreClass: scoreClass,
+        }
+      })
+
+      revalidatePath('/')
+      return JSON.stringify(finalStats)
+    } else {
+      throw new Error('Invalid seasons data')
+    }
   } catch (error) {
     console.error('Error fetching all time stats:', error)
   }

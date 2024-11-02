@@ -85,13 +85,13 @@ export function convertToNumber(input: string): number {
 }
 
 export function getScoreClass(
-  playerTotal: number,
+  playerScore: number,
   badScore: number,
   mediumScore: number,
   goodScore: number
 ) {
-  if (playerTotal <= badScore) return 'badScore'
-  if (playerTotal > badScore && playerTotal <= mediumScore) return 'mediumScore'
-  if (playerTotal > goodScore) return 'goodScore'
+  if (playerScore <= badScore) return 'badScore'
+  if (playerScore > badScore && playerScore <= mediumScore) return 'mediumScore'
+  if (playerScore > goodScore) return 'goodScore'
   return ''
 }
