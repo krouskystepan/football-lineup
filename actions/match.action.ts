@@ -70,55 +70,43 @@ export async function getMatches() {
   }
 }
 
-export async function getMatchStats() {
+export async function getAllTimeStats(seasonId?: string) {
   try {
     await connectToDatabase()
 
-    const matches: MatchType[] = await Match.find({})
+    const seasons = await getSeasons()
+    const parsedSeasons =
+      typeof seasons === 'string' ? JSON.parse(seasons) : seasons
 
-    const matchStats = matches
-      .map((match) => {
-        if (!match.total || !Array.isArray(match.total)) {
-          return
-        }
+    if (!Array.isArray(parsedSeasons) || parsedSeasons.length === 0) {
+      throw new Error('No seasons found')
+    }
 
-        const totalScore = match.total.reduce((acc: number, playerStats) => {
-          const score =
-            typeof playerStats.totalScore === 'number'
-              ? playerStats.totalScore
-              : 0
-          return acc + score
-        }, 0)
+    let selectedSeason: SeasonType | null = null
 
-        return {
-          matchName: match.matchName,
-          totalScore: totalScore.toFixed(0),
-          createdAt: match.createdAt,
-        }
-      })
-      .filter(
-        (
-          stat
-        ): stat is { matchName: string; totalScore: string; createdAt: Date } =>
-          stat !== undefined
+    if (seasonId) {
+      selectedSeason = parsedSeasons.find(
+        (season: SeasonType) => season._id === seasonId
       )
+      if (!selectedSeason) {
+        throw new Error(`Season with ID ${seasonId} not found`)
+      }
+    }
 
-    revalidatePath('/')
-    return JSON.stringify(matchStats)
-  } catch (error) {
-    console.error('Error fetching match stats:', error)
-  }
-}
+    let matches
 
-export async function getAllTimeStats() {
-  try {
-    await connectToDatabase()
+    if (selectedSeason) {
+      matches = await Match.find({
+        createdAt: {
+          $gte: new Date(selectedSeason.date.from),
+          $lte: new Date(selectedSeason.date.to),
+        },
+      })
+    } else {
+      matches = await Match.find({})
+    }
 
-    const [matches, lineups] = await Promise.all([
-      Match.find({}),
-      Lineup.find({}),
-    ])
-
+    const lineups = await Lineup.find({})
     const activeLineups = new Set(lineups.map((lineup) => lineup.name))
     const activeLineupMap = new Map<string, number>(
       lineups.map((lineup) => [lineup.name, lineup.level])
@@ -127,50 +115,42 @@ export async function getAllTimeStats() {
     const playerStatsMap = new Map<string, PlayerStats>()
 
     matches.forEach((match) => {
-      if (!match.total || !Array.isArray(match.total)) {
-        return
-      }
+      if (!match.total || !Array.isArray(match.total)) return
 
       let motmPlayer: string | null = null
       let highestScore = -Infinity
 
-      match.total.forEach(
-        (player: { playerName: string; totalScore: string }) => {
-          if (!player.playerName || player.totalScore === undefined) {
-            return
-          }
+      match.total.forEach((player: PlayerStats) => {
+        if (!player.playerName || player.totalScore === undefined) return
 
-          if (player.playerName.includes('Junior')) {
-            return
-          }
+        if (player.playerName.includes('Junior')) return
 
-          const score = parseFloat(player.totalScore)
-          if (score > highestScore) {
-            highestScore = score
-            motmPlayer = player.playerName
-          }
-
-          const isActive = activeLineups.has(player.playerName)
-          const level = activeLineupMap.get(player.playerName) || 0
-
-          if (!playerStatsMap.has(player.playerName)) {
-            playerStatsMap.set(player.playerName, {
-              playerName: player.playerName,
-              level: level,
-              totalScore: '0',
-              numberOfMatches: 0,
-              isActive: isActive,
-              motmCount: 0,
-            })
-          }
-
-          const playerStats = playerStatsMap.get(player.playerName)!
-          playerStats.totalScore = (
-            parseFloat(playerStats.totalScore) + score
-          ).toFixed(2)
-          playerStats.numberOfMatches += 1
+        const score = parseFloat(player.totalScore)
+        if (score > highestScore) {
+          highestScore = score
+          motmPlayer = player.playerName
         }
-      )
+
+        const isActive = activeLineups.has(player.playerName)
+        const level = activeLineupMap.get(player.playerName) || 0
+
+        if (!playerStatsMap.has(player.playerName)) {
+          playerStatsMap.set(player.playerName, {
+            playerName: player.playerName,
+            level: level,
+            totalScore: '0',
+            numberOfMatches: 0,
+            isActive: isActive,
+            motmCount: 0,
+          })
+        }
+
+        const playerStats = playerStatsMap.get(player.playerName)!
+        playerStats.totalScore = (
+          parseFloat(playerStats.totalScore) + score
+        ).toFixed(2)
+        playerStats.numberOfMatches += 1
+      })
 
       if (motmPlayer && playerStatsMap.has(motmPlayer)) {
         const playerStats = playerStatsMap.get(motmPlayer)!
@@ -182,58 +162,35 @@ export async function getAllTimeStats() {
       (playerStats) => !playerStats.playerName.includes('Junior')
     )
 
-    const seasons = await getSeasons()
-    const parsedSeasons =
-      typeof seasons === 'string' ? JSON.parse(seasons) : seasons
+    const averageBadScore = selectedSeason?.badScore || 0
+    const averageMediumScore = selectedSeason?.mediumScore || 0
+    const averageGoodScore = selectedSeason?.goodScore || Infinity
 
-    if (Array.isArray(parsedSeasons)) {
-      const averageBadScore =
-        parsedSeasons.reduce(
-          (sum: number, season: SeasonType) => sum + season.badScore,
-          0
-        ) / parsedSeasons.length
+    const finalStats = allTimeStats.map((playerStats) => {
+      const averageScore = playerStats.numberOfMatches
+        ? parseFloat(playerStats.totalScore) / playerStats.numberOfMatches
+        : 0
 
-      const averageMediumScore =
-        parsedSeasons.reduce(
-          (sum: number, season: SeasonType) => sum + season.mediumScore,
-          0
-        ) / parsedSeasons.length
+      const scorePerLevel =
+        playerStats.level > 0 ? averageScore / playerStats.level : 0
 
-      const averageGoodScore =
-        parsedSeasons.reduce(
-          (sum: number, season: SeasonType) => sum + season.goodScore,
-          0
-        ) / parsedSeasons.length
+      const scoreClass = getScoreClass(
+        averageScore,
+        averageBadScore,
+        averageMediumScore,
+        averageGoodScore
+      )
 
-      const finalStats = allTimeStats.map((playerStats) => {
-        const averageScore = playerStats.numberOfMatches
-          ? parseFloat(playerStats.totalScore) / playerStats.numberOfMatches
-          : 0
+      return {
+        ...playerStats,
+        averageScore: averageScore.toFixed(2),
+        scorePerLevel: scorePerLevel.toFixed(2),
+        averageScoreClass: scoreClass,
+      }
+    })
 
-        const scorePerLevel =
-          playerStats.level > 0 ? averageScore / playerStats.level : 0
-
-        // Calculate the class for the average score of each player
-        const scoreClass = getScoreClass(
-          averageScore,
-          averageBadScore,
-          averageMediumScore,
-          averageGoodScore
-        )
-
-        return {
-          ...playerStats,
-          averageScore: averageScore.toFixed(2),
-          scorePerLevel: scorePerLevel.toFixed(2),
-          averageScoreClass: scoreClass,
-        }
-      })
-
-      revalidatePath('/')
-      return JSON.stringify(finalStats)
-    } else {
-      throw new Error('Invalid seasons data')
-    }
+    revalidatePath('/')
+    return JSON.stringify(finalStats)
   } catch (error) {
     console.error('Error fetching all time stats:', error)
   }
