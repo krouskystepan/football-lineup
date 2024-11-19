@@ -6,6 +6,8 @@ import { Toaster } from '@/components/ui/sonner'
 import { getServerSession } from 'next-auth'
 import SessionProvider from '@/providers/SessionProvider'
 import Navbar from '@/components/Navbar'
+import { ThemeProvider } from '@/components/ThemeProvider'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -27,17 +29,27 @@ export default async function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          'min-h-screen bg-background font-sans antialiased',
+          'min-h-screen bg-background font-sans antialiased relative',
           fontSans.variable
         )}
       >
-        <SessionProvider session={session}>
-          <main>
-            <Navbar />
-            {children}
-          </main>
-          <Toaster richColors />
-        </SessionProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SessionProvider session={session}>
+            <main>
+              <Navbar />
+              {children}
+            </main>
+            <Toaster richColors position="bottom-left" />
+            <div className="fixed bottom-6 right-6">
+              <ThemeToggle />
+            </div>
+          </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

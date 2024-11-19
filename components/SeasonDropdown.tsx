@@ -36,11 +36,13 @@ export default function SeasonDropdown({
       </SelectTrigger>
       <SelectContent>
         <SelectItem value=" ">Všechny sezóny</SelectItem>
-        {seasons.map((season) => (
-          <SelectItem key={season._id} value={season._id!}>
-            {season.seasonName}
-          </SelectItem>
-        ))}
+        {seasons
+          .map((season) => (
+            <SelectItem key={season._id} value={season._id!}>
+              {season.seasonName}
+            </SelectItem>
+          ))
+          .reverse()}
       </SelectContent>
     </Select>
   )
